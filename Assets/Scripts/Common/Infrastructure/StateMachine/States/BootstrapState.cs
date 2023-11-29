@@ -3,6 +3,7 @@ using Common.Infrastructure.Services.Progress;
 using Common.Infrastructure.Services.SavedData;
 using Common.Infrastructure.Services.SaveLoad;
 using Common.Infrastructure.Services.StaticData;
+using Cysharp.Threading.Tasks;
 
 namespace Common.Infrastructure.StateMachine.States
 {
@@ -33,14 +34,18 @@ namespace Common.Infrastructure.StateMachine.States
             
             StateMachine.Enter<LoadLevelState>();
         }
+
         public override void Exit()
         { }
+        
         private void LoadProgressOrCreateNew()
         {
             _persistentProgressService.SaveData = _saveLoadService.LoadData() ?? new SaveData();
             _saveLoadService.SaveData();
         }
+        
         private void LoadStaticData() => _staticDataService.Load();
+        
         private void CreateUIRootAndShowLoadingCurtain()
         {
             _uiFactory.CreateUIRoot();

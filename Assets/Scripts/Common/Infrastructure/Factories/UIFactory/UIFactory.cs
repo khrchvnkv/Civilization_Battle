@@ -5,6 +5,7 @@ using Common.Infrastructure.Services.DontDestroyOnLoadCreator;
 using Common.Infrastructure.Services.StaticData;
 using Common.Infrastructure.WindowsManagement;
 using Common.UnityLogic.UI.Windows;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Common.Infrastructure.Factories.UIFactory
@@ -48,12 +49,12 @@ namespace Common.Infrastructure.Factories.UIFactory
             _uiRoot.LoadingCurtain.Show();
         }
         public void HideLoadingCurtain() => _uiRoot.LoadingCurtain.Hide();
-        public void ShowWindow<TData>(TData data) where TData : struct, IWindowData
+        public async UniTask ShowWindow<TData>(TData data) where TData : struct, IWindowData
         {
             if (!_createdObjects.TryGetValue(data.WindowName, out var window))
             {
                 var path = string.Format(UI_PATH, data.WindowName);
-                var windowPrefab = _assetProvider.Load(path);
+                var windowPrefab = await _assetProvider.LoadAsync(path);
                 window = _zenjectFactory.Instantiate(windowPrefab, _uiRoot.WindowsParent);
                 _createdObjects.Add(data.WindowName, window);
             }

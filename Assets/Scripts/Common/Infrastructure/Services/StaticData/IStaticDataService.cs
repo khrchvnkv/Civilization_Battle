@@ -5,6 +5,7 @@ namespace Common.Infrastructure.Services.StaticData
     public interface IStaticDataService
     {
         GameStaticData GameStaticData { get; }
+        UnitsStaticData UnitsStaticData { get; }
 
         void Load();
     }

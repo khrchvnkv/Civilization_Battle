@@ -1,4 +1,5 @@
 using Common.StaticData;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Common.Infrastructure.Services.AssetsManagement
@@ -7,8 +8,17 @@ namespace Common.Infrastructure.Services.AssetsManagement
     {
         private const string GAME_STATIC_DATA_PATH = "StaticData/GameStaticData";
 
-        public GameStaticData LoadGameStaticData() => Load<GameStaticData>(GAME_STATIC_DATA_PATH);
-        public GameObject Load(in string path) => Load<GameObject>(path);
-        private T Load<T>(in string path) where T : Object => Resources.Load<T>(path);
+        public GameStaticData LoadGameStaticData() => 
+            Load<GameStaticData>(GAME_STATIC_DATA_PATH);
+
+        public UnitStaticData[] LoadUnitsStaticData() => LoadAll<UnitStaticData>(Constants.UnitDataPath.LocalPath);
+        public async UniTask<GameObject> LoadAsync(string path) => await LoadAsync<GameObject>(path);
+        private T Load<T>(string path) where T : Object => Resources.Load<T>(path);
+        private async UniTask<T> LoadAsync<T>(string path) where T : Object
+        {
+            var result = await Resources.LoadAsync<T>(path);
+            return result as T;
+        }
+        private T[] LoadAll<T>(string path) where T : Object => Resources.LoadAll<T>(path);
     }
 }

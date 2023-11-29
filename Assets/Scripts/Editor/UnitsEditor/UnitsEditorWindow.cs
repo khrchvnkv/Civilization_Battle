@@ -1,5 +1,7 @@
 using System;
+using Common;
 using Common.StaticData;
+using Common.UnityLogic.Units;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
@@ -8,17 +10,13 @@ namespace Editor.UnitsEditor
 {
     public sealed class UnitsEditorWindow : EditorWindow
     {
-        private const string GlobalPath = "Assets/Resources";
-        private const string LocalPath = "StaticData/UnitsData";
-        private const string UnitDataNameFormat = "{0}_Data";
-
         [SerializeField, ShowAssetPreview] private GameObject _test;
         
         private string _name;
         private int _hp;
         private float _damage;
         private int _range;
-        private GameObject _prefab;
+        private Unit _prefab;
         
         [MenuItem("Window/Units Editor")]
         public static void ShowWindow()
@@ -34,7 +32,7 @@ namespace Editor.UnitsEditor
             DrawProperty("Damage", () => _damage = EditorGUILayout.Slider(_damage, 0.1f, 100_000));
             DrawProperty("Range", () => _range = EditorGUILayout.IntSlider(_range, 1, 10));
             DrawProperty("Prefab",
-                () => _prefab = (GameObject)EditorGUILayout.ObjectField(_prefab, typeof(GameObject), true));
+                () => _prefab = (Unit)EditorGUILayout.ObjectField(_prefab, typeof(Unit), true));
 
             if (GUILayout.Button("Create Data"))
             {
@@ -52,6 +50,7 @@ namespace Editor.UnitsEditor
         {
             if (string.IsNullOrWhiteSpace(_name)) throw new Exception("Incorrect unit name");
             if (ResourceAlreadyExists()) throw new Exception($"Resource with name {_name} already created");
+            if (_prefab is null) throw new Exception("No prefab data");
             
             var staticData = CreateInstance<UnitStaticData>();
             staticData.name = GetUnitDataName();
@@ -59,8 +58,9 @@ namespace Editor.UnitsEditor
             staticData.HP = _hp;
             staticData.Damage = _damage;
             staticData.Range = _range;
+            staticData.Unit = _prefab;
 
-            AssetDatabase.CreateAsset(staticData, $"{GlobalPath}/{LocalPath}/{staticData.name}.asset");
+            AssetDatabase.CreateAsset(staticData, $"{Constants.UnitDataPath.GlobalPath}/{Constants.UnitDataPath.LocalPath}/{staticData.name}.asset");
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();
@@ -69,9 +69,9 @@ namespace Editor.UnitsEditor
         }
         private bool ResourceAlreadyExists()
         {
-            var resource = Resources.Load($"{LocalPath}/{GetUnitDataName()}");
+            var resource = Resources.Load($"{Constants.UnitDataPath.LocalPath}/{GetUnitDataName()}");
             return resource is not null;
         }
-        private string GetUnitDataName() => string.Format(UnitDataNameFormat, _name);
+        private string GetUnitDataName() => _name;
     }
 }
