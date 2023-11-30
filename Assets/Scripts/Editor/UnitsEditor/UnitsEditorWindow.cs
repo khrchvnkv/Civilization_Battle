@@ -13,7 +13,7 @@ namespace Editor.UnitsEditor
         [SerializeField, ShowAssetPreview] private GameObject _test;
         
         private string _name;
-        private int _hp;
+        private float _hp;
         private float _damage;
         private int _range;
         private Unit _prefab;
@@ -28,7 +28,7 @@ namespace Editor.UnitsEditor
             GUILayout.Label("Unit Data");
             _name = EditorGUILayout.TextField("Name", _name);
 
-            DrawProperty("HP", () => _hp = EditorGUILayout.IntSlider(_hp, 1, 100_000));
+            DrawProperty("HP", () => _hp = EditorGUILayout.Slider(_hp, 1, 100_000));
             DrawProperty("Damage", () => _damage = EditorGUILayout.Slider(_damage, 0.1f, 100_000));
             DrawProperty("Range", () => _range = EditorGUILayout.IntSlider(_range, 1, 10));
             DrawProperty("Prefab",

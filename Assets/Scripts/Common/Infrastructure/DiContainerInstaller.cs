@@ -5,6 +5,7 @@ using Common.Infrastructure.Services.AssetsManagement;
 using Common.Infrastructure.Services.Coroutines;
 using Common.Infrastructure.Services.DontDestroyOnLoadCreator;
 using Common.Infrastructure.Services.ECS;
+using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.MonoUpdate;
 using Common.Infrastructure.Services.Progress;
 using Common.Infrastructure.Services.SaveLoad;
@@ -46,6 +47,7 @@ namespace Common.Infrastructure
             Container.Bind<ISaveLoadService>().To<SaveLoadService>().FromNew().AsSingle();
             Container.Bind<IPersistentProgressService>().To<PersistentProgressService>().FromNew().AsSingle();
             Container.Bind<ISceneContextService>().To<SceneContextService>().FromNew().AsSingle();
+            Container.Bind<IInputService>().To<InputService>().FromNew().AsSingle();
             Container.Bind<ISceneLoader>().To<SceneLoader>().FromNew().AsSingle();
         }
         private void BindGameStateMachine()

@@ -1,5 +1,6 @@
 using Common.Infrastructure.Factories.Zenject;
 using Common.Infrastructure.Services.StaticData;
+using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Units;
 using UnityEngine;
 
@@ -16,10 +17,11 @@ namespace Common.Infrastructure.Factories.UnitsFactory
             _staticDataService = staticDataService;
         }
         
-        public Unit SpawnUnit(in string unitName, in Transform spawnPoint)
+        public Unit SpawnUnit(in string unitName, in TeamTypes teamType, in Cell cell)
         {
             var unitData = _staticDataService.UnitsStaticData.GetStaticDataForUnit(unitName);
-            var unit = _zenjectFactory.Instantiate(unitData.Unit, spawnPoint);
+            var unit = _zenjectFactory.Instantiate(unitData.Unit, cell.UnitSpawnPoint);
+            unit.Init(unitData, teamType, cell.Data);
             return unit;
         }
 

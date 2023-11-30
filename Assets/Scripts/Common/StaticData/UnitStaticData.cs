@@ -7,7 +7,7 @@ namespace Common.StaticData
     public sealed class UnitStaticData : ScriptableObject
     {
         [field: SerializeField] public string UnitName { get; set; }
-        [field: SerializeField] public int HP { get; set; }
+        [field: SerializeField] public float HP { get; set; }
         [field: SerializeField] public float Damage { get; set; }
         [field: SerializeField] public int Range { get; set; }
         [field: SerializeField] public Unit Unit { get; set; }

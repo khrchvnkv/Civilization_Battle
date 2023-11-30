@@ -1,5 +1,7 @@
 using System;
 using Common.Infrastructure.Services.MonoUpdate;
+using Common.UnityLogic.Ecs.Systems.Battle.UnitMovement;
+using Common.UnityLogic.Ecs.Systems.Battle.UnitSelection;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -24,14 +26,19 @@ namespace Common.Infrastructure.Services.ECS
             Init();
         }
         
-        public void Dispose() => _monoUpdateSystem.OnUpdate -= UpdateEcs;
+        public void Dispose()
+        {
+            _monoUpdateSystem.OnUpdate -= UpdateEcs;
+            _updateSystems.Destroy();
+            World.Destroy();
+        }
 
         private void Init()
         {
             World = new EcsWorld();
 
             _updateSystems = new EcsSystems(World);
-
+            
             AddSystems();
             
             _updateSystems.Init();
@@ -41,10 +48,17 @@ namespace Common.Infrastructure.Services.ECS
 
         private void AddSystems()
         {
-            
+            AddSystem<UnitSelectionSystem>();
+            AddSystem<UnitMovementSystem>();
+        }
+
+        private void AddSystem<T>() where T : IEcsSystem, new()
+        {
+            var system = new T();
+            _diContainer.Inject(system);
+            _updateSystems.Add(system);
         }
 
         private void UpdateEcs() => _updateSystems?.Run();
-
     }
 }

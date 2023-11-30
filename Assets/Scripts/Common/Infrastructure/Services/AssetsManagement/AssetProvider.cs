@@ -12,6 +12,7 @@ namespace Common.Infrastructure.Services.AssetsManagement
             Load<GameStaticData>(GAME_STATIC_DATA_PATH);
 
         public UnitStaticData[] LoadUnitsStaticData() => LoadAll<UnitStaticData>(Constants.UnitDataPath.LocalPath);
+        public GameObject Load(string path) => Load<GameObject>(path);
         public async UniTask<GameObject> LoadAsync(string path) => await LoadAsync<GameObject>(path);
         private T Load<T>(string path) where T : Object => Resources.Load<T>(path);
         private async UniTask<T> LoadAsync<T>(string path) where T : Object

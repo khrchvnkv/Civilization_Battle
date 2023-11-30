@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadingCurtain
       objectReference: {fileID: 0}
+    - target: {fileID: 8204612441645064954, guid: e705181151c6243a2be7eac68bcb9791, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8204612441645064955, guid: e705181151c6243a2be7eac68bcb9791, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

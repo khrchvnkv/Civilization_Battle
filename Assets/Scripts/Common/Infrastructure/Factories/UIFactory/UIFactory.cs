@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Common.Infrastructure.Factories.Zenject;
 using Common.Infrastructure.Services.AssetsManagement;
-using Common.Infrastructure.Services.DontDestroyOnLoadCreator;
 using Common.Infrastructure.Services.StaticData;
 using Common.Infrastructure.WindowsManagement;
 using Common.UnityLogic.UI.Windows;
@@ -16,19 +15,16 @@ namespace Common.Infrastructure.Factories.UIFactory
 
         private readonly IAssetProvider _assetProvider;
         private readonly IStaticDataService _staticDataService;
-        private readonly IDontDestroyOnLoadCreator _dontDestroyOnLoadCreator;
         private readonly IZenjectFactory _zenjectFactory;
 
         private readonly Dictionary<string, GameObject> _createdObjects;
 
         private UIRoot _uiRoot;
 
-        public UIFactory(IAssetProvider assetProvider, IStaticDataService staticDataService, 
-            IDontDestroyOnLoadCreator dontDestroyOnLoadCreator, IZenjectFactory zenjectFactory)
+        public UIFactory(IAssetProvider assetProvider, IStaticDataService staticDataService, IZenjectFactory zenjectFactory)
         {
             _assetProvider = assetProvider;
             _staticDataService = staticDataService;
-            _dontDestroyOnLoadCreator = dontDestroyOnLoadCreator;
             _zenjectFactory = zenjectFactory;
             _createdObjects = new Dictionary<string, GameObject>();
         }
@@ -49,12 +45,12 @@ namespace Common.Infrastructure.Factories.UIFactory
             _uiRoot.LoadingCurtain.Show();
         }
         public void HideLoadingCurtain() => _uiRoot.LoadingCurtain.Hide();
-        public async UniTask ShowWindow<TData>(TData data) where TData : struct, IWindowData
+        public void ShowWindow<TData>(TData data) where TData : struct, IWindowData
         {
             if (!_createdObjects.TryGetValue(data.WindowName, out var window))
             {
                 var path = string.Format(UI_PATH, data.WindowName);
-                var windowPrefab = await _assetProvider.LoadAsync(path);
+                var windowPrefab = _assetProvider.Load(path);
                 window = _zenjectFactory.Instantiate(windowPrefab, _uiRoot.WindowsParent);
                 _createdObjects.Add(data.WindowName, window);
             }

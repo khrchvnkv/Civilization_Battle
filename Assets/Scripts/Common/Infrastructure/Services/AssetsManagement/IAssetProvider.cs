@@ -8,6 +8,8 @@ namespace Common.Infrastructure.Services.AssetsManagement
     {
         GameStaticData LoadGameStaticData();
         UnitStaticData[] LoadUnitsStaticData();
+
+        GameObject Load(string path);
         UniTask<GameObject> LoadAsync(string path);
     }
 }

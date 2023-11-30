@@ -12,17 +12,19 @@ namespace Common.UnityLogic.SceneContext
         [SerializeField] private UnitsBuilder _unitsBuilder;
 
         private ISceneContextService _sceneContextService;
-        
+
+
         [Inject]
         private void Construct(ISceneContextService sceneContextService)
         {
             _sceneContextService = sceneContextService;
-
+            
             Init();
         }
 
         private void Init()
         {
+            _sceneContextService.MainCamera = Camera.main;
             _sceneContextService.GridMap = new GridMap(_gridBuilder.Cells);
             _sceneContextService.UnitsBuilder = _unitsBuilder;
         }

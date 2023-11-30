@@ -8,7 +8,7 @@ namespace Common.Infrastructure.Factories.UIFactory
         void CreateUIRoot();
         void ShowLoadingCurtain();
         void HideLoadingCurtain();
-        UniTask ShowWindow<TData>(TData data) where TData : struct, IWindowData;
+        void ShowWindow<TData>(TData data) where TData : struct, IWindowData;
         void Hide<TData>(TData data) where TData : struct, IWindowData;
     }
 }

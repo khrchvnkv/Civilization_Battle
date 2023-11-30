@@ -1,11 +1,11 @@
+using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Units;
-using UnityEngine;
 
 namespace Common.Infrastructure.Factories.UnitsFactory
 {
     public interface IUnitsFactory
     {
-        Unit SpawnUnit(in string unitName, in Transform spawnPoint);
+        public Unit SpawnUnit(in string unitName, in TeamTypes teamType, in Cell cell);
         void DespawnUnit(in Unit unit);
     }
 }

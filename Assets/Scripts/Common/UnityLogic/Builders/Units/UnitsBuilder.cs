@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Common.Infrastructure.Factories.UnitsFactory;
 using Common.UnityLogic.Builders.Grid;
+using Common.UnityLogic.Units;
 using UnityEngine;
 using Zenject;
 
@@ -12,7 +13,9 @@ namespace Common.UnityLogic.Builders.Units
         [SerializeField] private GridBuilder _gridBuilder;
 
         private IUnitsFactory _unitsFactory;
+        private List<Unit> _units = new();
 
+        public IEnumerable<Unit> Units => _units;
         private IEnumerable<Cell> Cells => _gridBuilder.Cells;
 
         private void OnValidate() => _gridBuilder ??= gameObject.GetComponent<GridBuilder>();
@@ -31,7 +34,7 @@ namespace Common.UnityLogic.Builders.Units
             {
                 if (cell.IsNotDefaultType)
                 {
-                    _unitsFactory.SpawnUnit(cell.UnitName, cell.UnitSpawnPoint);
+                    _units.Add(_unitsFactory.SpawnUnit(cell.UnitName, cell.TeamType, cell));
                 }
             }
         }
