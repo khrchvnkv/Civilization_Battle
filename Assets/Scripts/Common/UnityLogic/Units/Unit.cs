@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using Common.Infrastructure.Services.ECS;
 using Common.StaticData;
 using Common.UnityLogic.Builders.Grid;
+using Common.UnityLogic.Ecs.Components.Units;
 using Common.UnityLogic.Ecs.Providers.Unit;
 using Common.UnityLogic.Units.Health;
 using Common.UnityLogic.Units.Movement;
 using Common.UnityLogic.Units.View;
 using UnityEngine;
+using Zenject;
 
 namespace Common.UnityLogic.Units
 {
@@ -20,8 +23,10 @@ namespace Common.UnityLogic.Units
         [SerializeField] private UnitMovement _unitMovement;
         [SerializeField] private UnitHealth _unitHealth;
 
+        private IEcsStartup _ecsStartup;
+        
         public int EntityID => _unitProvider.EntityID;
-        public bool IsAvailable => _unitHealth.IsAlive && !_unitMovement.IsMoving;
+        public bool IsAvailable => _unitHealth.IsAlive && !_unitMovement.IsMoving && IsActiveTeam();
         public UnitModel Model { get; private set; }
 
         private void OnValidate()
@@ -35,9 +40,12 @@ namespace Common.UnityLogic.Units
             DisableEcsProvider();
         }
 
+        [Inject]
+        private void Construct(IEcsStartup ecsStartup) => _ecsStartup = ecsStartup;
+
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
         {
-            Model = new UnitModel(staticData, teamType, cellData);
+            Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitMovement);
             _unitHealth.Init(Model.StaticData.HP);
             _unitView.UpdateView(teamType);
 
@@ -50,6 +58,12 @@ namespace Common.UnityLogic.Units
             {
                 if (attackedUnit is not null) Attack(attackedUnit);
             });
+        }
+
+        private bool IsActiveTeam()
+        {
+            ref var component = ref _ecsStartup.World.GetPool<UnitTeamComponent>().Get(EntityID);
+            return component.IsActiveTeam;
         }
         
         private void TakeDamage(in float damage) => _unitHealth.TakeDamage(damage);

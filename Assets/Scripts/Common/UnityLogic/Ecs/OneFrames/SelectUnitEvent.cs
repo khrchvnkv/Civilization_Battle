@@ -6,9 +6,6 @@ namespace Common.UnityLogic.Ecs.OneFrames
     {
         public readonly Unit Unit;
 
-        public SelectUnitEvent(Unit unit)
-        {
-            Unit = unit;
-        }
+        public SelectUnitEvent(Unit unit) => Unit = unit;
     }
 }

@@ -18,19 +18,18 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
     public sealed class UnitMovementSystem : IEcsInitSystem, IEcsRunSystem, IDisposable
     {
         private IInputService _inputService;
-        private IEcsStartup _ecsStartup;
         private ISceneContextService _sceneContextService;
         private IUIFactory _uiFactory;
 
         private EcsFilter _unitMovementFilter;
         private EcsPool<UnitMovementComponent> _unitMovementPool;
+        private EcsPool<UnitTeamComponent> _unitTeamPool;
 
         [Inject]
-        private void Construct(IInputService inputService, IEcsStartup ecsStartup, 
-            ISceneContextService sceneContextService, IUIFactory uiFactory)
+        private void Construct(IInputService inputService, ISceneContextService sceneContextService, 
+            IUIFactory uiFactory)
         {
             _inputService = inputService;
-            _ecsStartup = ecsStartup;
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
 
@@ -45,6 +44,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
 
             _unitMovementFilter = world.Filter<UnitMovementComponent>().End();
             _unitMovementPool = world.GetPool<UnitMovementComponent>();
+            _unitTeamPool = world.GetPool<UnitTeamComponent>();
         }
         
         public void Run(IEcsSystems systems)
@@ -54,10 +54,15 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
                 ref var component = ref _unitMovementPool.Get(entity);
                 var model = component.Unit.Model;
                 var path = _sceneContextService.GridMap.GetPath(model.TeamType, model.CellData, component.MoveTo.Data);
+                var range = path.Count;
                 _sceneContextService.GridMap.IsEnemyLocated(model.TeamType, component.MoveTo.Data, out var attackedUnit);
                 
                 component.Unit.MoveUnit(path, attackedUnit);
-                _ecsStartup.World.GetPool<UnitMovementComponent>().Del(entity);
+
+                ref var teamComponent = ref _unitTeamPool.Get(component.Unit.EntityID);
+                teamComponent.AvailableRange -= range;
+
+                _unitMovementPool.Del(entity);
             }
         }
 
@@ -72,7 +77,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
             }
             
             // Move unit
-            ref var component = ref _ecsStartup.World.GetPool<UnitMovementComponent>().Add(unit.EntityID);
+            ref var component = ref _unitMovementPool.Add(unit.EntityID);
             component = new UnitMovementComponent(unit, cell);
             
             _sceneContextService.GridMap.HidePath();

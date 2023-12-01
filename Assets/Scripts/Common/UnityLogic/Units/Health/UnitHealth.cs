@@ -13,6 +13,7 @@ namespace Common.UnityLogic.Units.Health
         private float _hp;
 
         public bool IsAlive => _hp > 0;
+        public float HP => _hp;
 
         public void Init(in float maxHp)
         {

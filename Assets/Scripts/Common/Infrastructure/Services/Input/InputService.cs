@@ -55,11 +55,21 @@ namespace Common.Infrastructure.Services.Input
 
                 if (UnityEngine.Input.GetMouseButtonDown(0))
                 {
-                    if (hit.collider.gameObject.TryGetComponent(out Unit unit) && unit != _selectedUnit && unit.IsAvailable)
+                    if (hit.collider.gameObject.TryGetComponent(out Unit unit) && unit != _selectedUnit)
                     {
-                        _selectedUnit = unit;
-                        UnitClicked?.Invoke(_selectedUnit);
-                        return;
+                        if (unit.IsAvailable)
+                        {
+                            _selectedUnit = unit;
+                            UnitClicked?.Invoke(_selectedUnit);
+                            return;
+                        }
+                        
+                        // Try attack
+                        var unitCellData = unit.Model.CellData;
+                        if (_sceneContextService.GridMap.TryGetCell(unitCellData, out var unitCell))
+                        {
+                            HoverCell(unitCell);
+                        }
                     }
 
                     if (_selectedUnit is not null && _hoveredCell is not null)

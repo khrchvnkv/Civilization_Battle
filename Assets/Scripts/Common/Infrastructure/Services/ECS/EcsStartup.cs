@@ -1,5 +1,6 @@
 using System;
 using Common.Infrastructure.Services.MonoUpdate;
+using Common.UnityLogic.Ecs.Systems.Battle;
 using Common.UnityLogic.Ecs.Systems.Battle.UnitMovement;
 using Common.UnityLogic.Ecs.Systems.Battle.UnitSelection;
 using Leopotam.EcsLite;
@@ -50,6 +51,7 @@ namespace Common.Infrastructure.Services.ECS
         {
             AddSystem<UnitSelectionSystem>();
             AddSystem<UnitMovementSystem>();
+            AddSystem<BattleSystem>();
         }
 
         private void AddSystem<T>() where T : IEcsSystem, new()

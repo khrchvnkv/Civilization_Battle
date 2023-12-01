@@ -15,6 +15,7 @@ namespace Common.UnityLogic.UI.Windows
         }
         public void Hide()
         {
+            PrepareForHiding();
             if (WindowData.DestroyOnClosing)
             {
                 Destroy(gameObject);
@@ -27,5 +28,6 @@ namespace Common.UnityLogic.UI.Windows
             WindowData = default;
         }
         protected virtual void PrepareForShowing() { }
+        protected virtual void PrepareForHiding() { }
     }
 }
