@@ -52,7 +52,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
             {
                 ref var component = ref _selectionUnitPool.Get(entity);
                 ref var unitTeamComponent = ref _unitTeamPool.Get(entity);
-                var range = unitTeamComponent.AvailableRange;
+                var range = unitTeamComponent.UnitModel.AvailableMovementRange;
                 
                 var model = component.Unit.Model;
                 
@@ -74,7 +74,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
             ref var selectComponent = ref _selectionUnitPool.Add(entity);
             selectComponent = new SelectUnitEvent(unit);
 
-            var unitData = new GameHudWindowData.UnitData(unit.Model, teamComponent.AvailableRange);
+            var unitData = new GameHudWindowData.UnitData(unit.Model);
             _uiFactory.ShowWindow(new GameHudWindowData(unitData));
         }
     }

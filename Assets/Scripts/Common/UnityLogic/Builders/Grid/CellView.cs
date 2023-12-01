@@ -11,15 +11,18 @@ namespace Common.UnityLogic.Builders.Grid
         [Header("Visual")] 
         [SerializeField] private Material _defaultMaterial;
         [SerializeField] private Material _availableMaterial;
+        [SerializeField] private Material _readyAttackMaterial;
         
         private void OnValidate()
         {
             if (_meshRenderer is not null) _visualTransform ??= _meshRenderer.transform;
         }
         
-        public void ShowAvailablePath() => _meshRenderer.sharedMaterial = _availableMaterial;
+        public void ShowAvailableNode() => _meshRenderer.sharedMaterial = _availableMaterial;
+        
+        public void ShowAttackableNode() => _meshRenderer.sharedMaterial = _readyAttackMaterial;
 
-        public void HideAvailablePath() => _meshRenderer.sharedMaterial = _defaultMaterial;
+        public void HideAvailableNode() => _meshRenderer.sharedMaterial = _defaultMaterial;
 
         public void SetHovered() => _visualTransform.DOMoveY(0.3f, 0.5f);
 

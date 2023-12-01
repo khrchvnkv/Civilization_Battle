@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Common.Infrastructure.Services.ECS;
+using Common.Infrastructure.Services.SceneContext;
 using Common.StaticData;
 using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Ecs.Components.Units;
@@ -22,6 +24,7 @@ namespace Common.UnityLogic.Units
         [SerializeField] private UnitView _unitView;
         [SerializeField] private UnitMovement _unitMovement;
         [SerializeField] private UnitHealth _unitHealth;
+        [SerializeField] private Collider _collider;
 
         private IEcsStartup _ecsStartup;
         
@@ -50,6 +53,7 @@ namespace Common.UnityLogic.Units
             _unitView.UpdateView(teamType);
 
             EnableEcsProvider();
+            EnableCollider();
         }
 
         public void MoveUnit(in List<Cell> cells, Unit attackedUnit = null)
@@ -68,7 +72,16 @@ namespace Common.UnityLogic.Units
         
         private void TakeDamage(in float damage) => _unitHealth.TakeDamage(damage);
 
-        private void Attack(in Unit attackedUnit) => attackedUnit?.TakeDamage(Model.StaticData.Damage);
+        private void Attack(in Unit attackedUnit)
+        {
+            if (attackedUnit is null) throw new Exception("The attacked unit can not be null");
+
+            var damageMultiplier = GridMap.IsDiagonalCells(Model.CellData, attackedUnit.Model.CellData)
+                ? Model.StaticData.DiagonalAttackMultiplier
+                : 1.0f;
+            attackedUnit.TakeDamage(damageMultiplier * Model.StaticData.Damage);
+            Model.AvailableMovementRange = 0;
+        }
 
         private void OnEnable() => _unitHealth.Died += UnitDied;
 
@@ -81,10 +94,15 @@ namespace Common.UnityLogic.Units
         private void UnitDied()
         {
             DisableEcsProvider();
+            DisableCollider();
         }
 
         private void EnableEcsProvider() => _unitProvider.enabled = true;
         
         private void DisableEcsProvider() => _unitProvider.enabled = false;
+
+        private void EnableCollider() => _collider.enabled = true;
+        
+        private void DisableCollider() => _collider.enabled = false;
     }
 }

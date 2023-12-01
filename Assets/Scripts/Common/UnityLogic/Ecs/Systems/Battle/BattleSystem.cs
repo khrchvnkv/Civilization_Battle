@@ -140,7 +140,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
                 ref var teamComponent = ref _teamsPool.Get(entity);
                 var isActiveTeam = _activeTeam == teamComponent.UnitModel.TeamType;
                 teamComponent.IsActiveTeam = isActiveTeam;
-                teamComponent.AvailableRange = isActiveTeam ? teamComponent.UnitModel.StaticData.Range : 0;
+                teamComponent.UnitModel.AvailableMovementRange = isActiveTeam ? teamComponent.UnitModel.StaticData.Range : 0;
             }
         }
     }

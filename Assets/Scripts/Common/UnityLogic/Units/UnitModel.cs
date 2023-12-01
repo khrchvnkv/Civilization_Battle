@@ -14,8 +14,10 @@ namespace Common.UnityLogic.Units
         private readonly UnitMovement _unitMovement;
         
         public Vector2Int CellData { get; set; }
+        public int AvailableMovementRange { get; set; }
         public float HP => _unitHealth.HP;
         public bool IsMoving => _unitMovement.IsMoving;
+        public bool IsAlive => HP > 0;
 
         public UnitModel(in UnitStaticData staticData, in TeamTypes teamType, 
             in Vector2Int cellData, in UnitHealth unitHealth, in UnitMovement unitMovement)

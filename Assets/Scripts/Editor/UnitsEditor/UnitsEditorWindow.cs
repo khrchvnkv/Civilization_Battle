@@ -12,14 +12,13 @@ namespace Editor.UnitsEditor
         private string _name;
         private float _hp;
         private float _damage;
+        private float _diagonalDamageMultiplier;
         private int _range;
         private Unit _prefab;
         
         [MenuItem("Window/Units Editor")]
-        public static void ShowWindow()
-        {
-            GetWindow<UnitsEditorWindow>(nameof(UnitsEditorWindow));
-        }
+        public static void ShowWindow() => GetWindow<UnitsEditorWindow>(nameof(UnitsEditorWindow));
+
         private void OnGUI()
         {
             GUILayout.Label("Unit Data");
@@ -27,6 +26,8 @@ namespace Editor.UnitsEditor
 
             DrawProperty("HP", () => _hp = EditorGUILayout.Slider(_hp, 1, 100_000));
             DrawProperty("Damage", () => _damage = EditorGUILayout.Slider(_damage, 0.1f, 100_000));
+            DrawProperty("Diagonal damage multiplier",
+                () => _diagonalDamageMultiplier = EditorGUILayout.Slider(_diagonalDamageMultiplier, 0.1f, 1));
             DrawProperty("Range", () => _range = EditorGUILayout.IntSlider(_range, 1, 10));
             DrawProperty("Prefab",
                 () => _prefab = (Unit)EditorGUILayout.ObjectField(_prefab, typeof(Unit), true));
@@ -54,6 +55,7 @@ namespace Editor.UnitsEditor
             staticData.UnitName = _name;
             staticData.HP = _hp;
             staticData.Damage = _damage;
+            staticData.DiagonalAttackMultiplier = _diagonalDamageMultiplier;
             staticData.Range = _range;
             staticData.Unit = _prefab;
 

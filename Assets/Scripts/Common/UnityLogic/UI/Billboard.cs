@@ -25,6 +25,7 @@ namespace Common.UnityLogic.UI
 
         private void OnDisable() => _monoUpdateSystem.OnLateUpdate -= UpdateBillboard;
 
-        private void UpdateBillboard() => _transform.LookAt(_mainCameraTransform);
+        private void UpdateBillboard() =>
+            _transform.rotation = _mainCameraTransform.rotation;
     }
 }

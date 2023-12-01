@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91db8e5b8ad424cab9174d1af7b6b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cellView: {fileID: 1959385310601879403}
+  <View>k__BackingField: {fileID: 1959385310601879403}
   <UnitSpawnPoint>k__BackingField: {fileID: 1874976889215406360}
   <Data>k__BackingField: {x: 0, y: 0}
 --- !u!114 &1959385310601879403
@@ -179,6 +179,7 @@ MonoBehaviour:
   _visualTransform: {fileID: 9053854691836308643}
   _defaultMaterial: {fileID: 2100000, guid: 81d9e7b5abbb147f594f78a7948b12c1, type: 2}
   _availableMaterial: {fileID: 2100000, guid: f048ac3d6491949dea7dbc8487713c38, type: 2}
+  _readyAttackMaterial: {fileID: 2100000, guid: ed2fe5488e9b7489bb239d03f43ef03b, type: 2}
 --- !u!1 &6842913932490080383
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,13 +14,8 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
         public struct UnitData
         {
             public readonly UnitModel UnitModel;
-            public readonly int AvailableMovementRange;
 
-            public UnitData(UnitModel unitModel, int availableMovementRange)
-            {
-                UnitModel = unitModel;
-                AvailableMovementRange = availableMovementRange;
-            }
+            public UnitData(UnitModel unitModel) => UnitModel = unitModel;
         }
     }
 }

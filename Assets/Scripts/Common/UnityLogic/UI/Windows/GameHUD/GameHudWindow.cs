@@ -29,13 +29,12 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
             _unitSlot.SetActive(unitSlotActive);
             if (unitSlotActive)
             {
-                var unitData = WindowData.Unit.Value;
-                var unitModel = unitData.UnitModel;
+                var unitModel = WindowData.Unit.Value.UnitModel;
 
                 var sb = new StringBuilder();
                 sb.Append($"HP: {unitModel.HP}/{unitModel.StaticData.HP}\n");
                 sb.Append($"Damage: {unitModel.StaticData.Damage}\n");
-                sb.Append($"Movement: {unitData.AvailableMovementRange}/{unitModel.StaticData.Range}");
+                sb.Append($"Movement: {unitModel.AvailableMovementRange}/{unitModel.StaticData.Range}");
                 _statsText.text = sb.ToString();
             }
         }

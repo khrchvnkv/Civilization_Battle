@@ -60,7 +60,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
                 component.Unit.MoveUnit(path, attackedUnit);
 
                 ref var teamComponent = ref _unitTeamPool.Get(component.Unit.EntityID);
-                teamComponent.AvailableRange -= range;
+                teamComponent.UnitModel.AvailableMovementRange -= range;
 
                 _unitMovementPool.Del(entity);
             }

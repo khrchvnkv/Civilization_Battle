@@ -46,6 +46,17 @@ namespace Common.Infrastructure.Services.SceneContext
             _cellsMap = cells.ToDictionary(x => x.Data, y => y);
             _availablePaths = new HashSet<Vector2Int>();
         }
+        
+        public static bool IsDiagonalCells(in Vector2Int cell1, in Vector2Int cell2)
+        {
+            var sqrLenght = SqrLenght(cell1, cell2);
+            if (sqrLenght == 2) return cell1.x != cell2.x && cell1.y != cell2.y;
+
+            return false;
+            
+            float SqrLenght(in Vector2Int cell1, in Vector2Int cell2) => 
+                (MathF.Pow(cell2.x - cell1.x, 2) + MathF.Pow(cell2.y - cell1.y, 2));
+        }
 
         public bool TryGetCell(in Vector2Int data, out Cell cell)
         {
@@ -74,7 +85,14 @@ namespace Common.Infrastructure.Services.SceneContext
             {
                 if (_cellsMap.TryGetValue(node, out var cell))
                 {
-                    cell.ShowAvailablePath();
+                    if (IsEnemyLocated(teamType, cell.Data))
+                    {
+                        cell.View.ShowAttackableNode();
+                    }
+                    else
+                    {
+                        cell.View.ShowAvailableNode();
+                    }
                 }
             }
         }
@@ -85,7 +103,7 @@ namespace Common.Infrastructure.Services.SceneContext
             {
                 if (_cellsMap.TryGetValue(cellData, out var cell))
                 {
-                    cell.HideAvailablePath();
+                    cell.View.HideAvailableNode();
                 }
             }
             _availablePaths.Clear();
@@ -94,7 +112,8 @@ namespace Common.Infrastructure.Services.SceneContext
         public bool IsEnemyLocated(TeamTypes teamType, Vector2Int cellData, out Unit enemyUnit)
         {
             enemyUnit = null;
-            var locatedUnits = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData).ToArray();
+            var locatedUnits = _unitsBuilder.Units
+                .Where(x => x.Model.CellData == cellData && x.Model.TeamType != teamType).ToArray();
             if (!locatedUnits.Any()) return false;
             
             if (locatedUnits.Length > 1) throw new Exception("More than one unit has the same cell data");
@@ -102,8 +121,7 @@ namespace Common.Infrastructure.Services.SceneContext
             return true;
         }
 
-
-        private List<Vector2Int> GetPathList(TeamTypes teamType, Vector2Int from, Vector2Int to)
+        private IEnumerable<Vector2Int> GetPathList(TeamTypes teamType, Vector2Int from, Vector2Int to)
         {
             Dictionary<Vector2Int, Way> availableWays = new();
             var startNode = new PathNode(from, 0);
@@ -189,11 +207,11 @@ namespace Common.Infrastructure.Services.SceneContext
         }
 
         private bool AnyLocated(Vector2Int cellData) => 
-            _unitsBuilder.Units.Any(x => x.Model.CellData == cellData);
+            _unitsBuilder.Units.Any(x => x.Model.CellData == cellData && x.Model.IsAlive);
 
         private bool IsTeammateLocated(TeamTypes teamType, Vector2Int cellData)
         {
-            var units = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData).ToArray();
+            var units = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData && x.Model.IsAlive).ToArray();
             if (!units.Any()) return false;
             
             return units.Any(x => x.Model.TeamType == teamType);
@@ -201,7 +219,7 @@ namespace Common.Infrastructure.Services.SceneContext
         
         private bool IsEnemyLocated(TeamTypes teamType, Vector2Int cellData)
         {
-            var units = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData).ToArray();
+            var units = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData && x.Model.IsAlive).ToArray();
             if (!units.Any()) return false;
             
             return units.Any(x => x.Model.TeamType != teamType);
