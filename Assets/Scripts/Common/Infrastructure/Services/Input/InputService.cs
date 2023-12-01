@@ -75,12 +75,12 @@ namespace Common.Infrastructure.Services.Input
         {
             UnhoverCell();
             _hoveredCell = cell;
-            cell.SetHovered();
+            cell.Hover();
         }
         
         private void UnhoverCell()
         {
-            _hoveredCell?.SetUnhovered();
+            _hoveredCell?.Unhover();
             _hoveredCell = null;
         }
     }

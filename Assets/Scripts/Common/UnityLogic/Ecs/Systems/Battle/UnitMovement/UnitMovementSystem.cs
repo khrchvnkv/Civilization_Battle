@@ -47,7 +47,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
             foreach (var entity in _unitMovementFilter)
             {
                 ref var component = ref _ecsStartup.World.GetPool<UnitMovementComponent>().Get(entity);
-                var path = _sceneContextService.GridMap.GetPath(component.Unit.CellData, component.MoveTo.Data);
+                var path = _sceneContextService.GridMap.GetPath(component.Unit.Model.CellData, component.MoveTo.Data);
                 component.ExecuteMove(path);
                 _ecsStartup.World.GetPool<UnitMovementComponent>().Del(entity);
             }
@@ -55,8 +55,11 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
 
         private void UnitMoveClicked(Unit unit, Cell cell)
         {
-            if (unit.CellData == cell.Data) return;
-            if (!_sceneContextService.GridMap.CellAvailable(cell.Data)) return;
+            if (unit.Model.CellData == cell.Data || !_sceneContextService.GridMap.CellAvailable(cell.Data))
+            {
+                _sceneContextService.GridMap.HidePath();
+                return;
+            }
             
             // Move unit
             ref var component = ref _ecsStartup.World.GetPool<UnitMovementComponent>().Add(unit.EntityID);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Common.Extensions;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Common.UnityLogic.Builders.Grid
 {
@@ -12,10 +13,10 @@ namespace Common.UnityLogic.Builders.Grid
         [SerializeField] private Vector2Int _gridSize;
         [SerializeField] private float _offset;
         [SerializeField] private float _cellSize;
-        [SerializeField] private Cell _cellPrefab;
-        [SerializeField] private List<Cell> _cells;
+        [SerializeField] private CellBuilder _cellPrefab;
+        [SerializeField] private List<CellBuilder> cellBuilders;
 
-        public IEnumerable<Cell> Cells => _cells;
+        public IEnumerable<CellBuilder> CellBuilders => cellBuilders;
         
         private void OnValidate()
         {
@@ -39,19 +40,19 @@ namespace Common.UnityLogic.Builders.Grid
                     var point = startPoint + new Vector3(j * (_cellSize + _offset), 0, i * (_cellSize + _offset));
                     var instance = Instantiate(_cellPrefab, point, Quaternion.identity, transform);
                     instance.name = $"Cell_{j}_{i}";
-                    instance.Data = new Vector2Int(j, i);
-                    _cells.Add(instance);
+                    instance.Cell.Data = new Vector2Int(j, i);
+                    cellBuilders.Add(instance);
                 }
             }
         }
         
         private void Clear()
         {
-            foreach (var cell in _cells)
+            foreach (var cell in cellBuilders)
             {
                 if (cell is not null) DestroyImmediate(cell.gameObject);
             }
-            _cells.Clear();
+            cellBuilders.Clear();
         }
     }
 }

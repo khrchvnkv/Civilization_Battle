@@ -15,8 +15,9 @@ namespace Common.UnityLogic.Ecs.Providers.Unit
             var unit = gameObject.GetComponent<Units.Unit>();
             if (unit is null) throw new Exception("Unit provider must have Unit component");
 
+            var unitModel = unit.Model;
             var unitTeamComponent =
-                new UnitTeamComponent(unit.TeamType, unit.StaticData.Range, unit.TeamType == DefaultTeam);
+                new UnitTeamComponent(unitModel.TeamType, unitModel.StaticData.Range, unitModel.TeamType == DefaultTeam);
             AddComponent(unitTeamComponent);
         }
     }

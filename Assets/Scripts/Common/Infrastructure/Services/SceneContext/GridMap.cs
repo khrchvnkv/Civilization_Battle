@@ -33,8 +33,9 @@ namespace Common.Infrastructure.Services.SceneContext
         private readonly Dictionary<Vector2Int, Cell> _cellsMap;
         private readonly HashSet<Vector2Int> _availablePaths;
 
-        public GridMap(in IEnumerable<Cell> cells)
+        public GridMap(in IEnumerable<CellBuilder> cellBuilders)
         {
+            var cells = cellBuilders.Select(x => x.Cell);
             _cellsMap = cells.ToDictionary(x => x.Data, y => y);
             _availablePaths = new HashSet<Vector2Int>();
         }
@@ -129,16 +130,16 @@ namespace Common.Infrastructure.Services.SceneContext
             var startNode = new PathNode(from, 0);
             CalculateAllPaths(startNode);
 
-            void CalculateAllPaths(in PathNode from)
+            void CalculateAllPaths(in PathNode fromNode)
             {
-                CalculatePath(from.NodeData + new Vector2Int(-1, 1), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(0, 1), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(1, 1), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(-1, 0), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(1, 0), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(-1, -1), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(0, -1), from.Range);
-                CalculatePath(from.NodeData + new Vector2Int(1, -1), from.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(-1, 1), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(0, 1), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(1, 1), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(-1, 0), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(1, 0), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(-1, -1), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(0, -1), fromNode.Range);
+                CalculatePath(fromNode.NodeData + new Vector2Int(1, -1), fromNode.Range);
             }
 
             return availableNodes.Select(x => x.Key).ToList();

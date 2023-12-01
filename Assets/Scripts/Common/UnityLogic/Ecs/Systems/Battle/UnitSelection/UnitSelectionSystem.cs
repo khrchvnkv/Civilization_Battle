@@ -47,7 +47,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
             foreach (var entity in _selectionUnitFilter)
             {
                 ref var component = ref _selectionUnitPool.Get(entity);
-                _sceneContextService.GridMap.ShowPath(component.Unit.CellData, component.Unit.StaticData.Range);
+                _sceneContextService.GridMap.ShowPath(component.Unit.Model.CellData, component.Unit.Model.StaticData.Range);
                 _selectionUnitPool.Del(entity);
             }
         }

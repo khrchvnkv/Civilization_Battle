@@ -16,7 +16,7 @@ namespace Common.UnityLogic.Builders.Units
         private List<Unit> _units = new();
 
         public IEnumerable<Unit> Units => _units;
-        private IEnumerable<Cell> Cells => _gridBuilder.Cells;
+        private IEnumerable<CellBuilder> CellBuilders => _gridBuilder.CellBuilders;
 
         private void OnValidate() => _gridBuilder ??= gameObject.GetComponent<GridBuilder>();
 
@@ -30,11 +30,11 @@ namespace Common.UnityLogic.Builders.Units
         
         private void Init()
         {
-            foreach (var cell in Cells)
+            foreach (var cellBuilder in CellBuilders)
             {
-                if (cell.IsNotDefaultType)
+                if (cellBuilder.IsNotDefaultType)
                 {
-                    _units.Add(_unitsFactory.SpawnUnit(cell.UnitName, cell.TeamType, cell));
+                    _units.Add(_unitsFactory.SpawnUnit(cellBuilder.UnitName, cellBuilder.TeamType, cellBuilder.Cell));
                 }
             }
         }

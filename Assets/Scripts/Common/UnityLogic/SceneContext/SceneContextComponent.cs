@@ -1,6 +1,8 @@
+using Common.Infrastructure.Factories.UIFactory;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Builders.Units;
+using Common.UnityLogic.UI.Windows.GameHUD;
 using UnityEngine;
 using Zenject;
 
@@ -12,12 +14,13 @@ namespace Common.UnityLogic.SceneContext
         [SerializeField] private UnitsBuilder _unitsBuilder;
 
         private ISceneContextService _sceneContextService;
-
-
+        private IUIFactory _uiFactory;
+        
         [Inject]
-        private void Construct(ISceneContextService sceneContextService)
+        private void Construct(ISceneContextService sceneContextService, IUIFactory uiFactory)
         {
             _sceneContextService = sceneContextService;
+            _uiFactory = uiFactory;
             
             Init();
         }
@@ -25,8 +28,10 @@ namespace Common.UnityLogic.SceneContext
         private void Init()
         {
             _sceneContextService.MainCamera = Camera.main;
-            _sceneContextService.GridMap = new GridMap(_gridBuilder.Cells);
+            _sceneContextService.GridMap = new GridMap(_gridBuilder.CellBuilders);
             _sceneContextService.UnitsBuilder = _unitsBuilder;
+            
+            _uiFactory.ShowWindow(new GameHudWindowData());
         }
     }
 }
