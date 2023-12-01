@@ -5,7 +5,7 @@ using Common.UnityLogic.Builders.Grid;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Common.UnityLogic.Units
+namespace Common.UnityLogic.Units.Movement
 {
     public sealed class UnitMovement : MonoBehaviour
     {
@@ -17,21 +17,25 @@ namespace Common.UnityLogic.Units
 
         private void OnValidate() => _transform ??= transform;
 
-        public void MoveUnit(List<Cell> cells, UnitModel unitModel)
+        public void MoveUnit(List<Cell> cells, UnitModel unitModel, Action completePathAction = null)
         {
-            if (!cells.Any()) throw new Exception("Path collection has 0 node");
+            if (!cells.Any())
+            {
+                completePathAction?.Invoke();
+                return;
+            }
 
             var lastCell = cells[^1];
             unitModel.CellData = lastCell.Data;
             IsMoving = true;
             MoveTween();
 
-            void MoveTween() => 
+            void MoveTween() =>
                 _transform
                     .DOMove(cells[0].UnitSpawnPoint.position, MovementBtwCellsDuration)
                     .SetEase(Ease.Linear)
                     .OnComplete(MoveToNextPoint);
-            
+
             void MoveToNextPoint()
             {
                 var cell = cells[0];
@@ -41,6 +45,7 @@ namespace Common.UnityLogic.Units
                     // Complete moving
                     _transform.position = cell.UnitSpawnPoint.position;
                     _transform.SetParent(cell.UnitSpawnPoint);
+                    completePathAction?.Invoke();
                     IsMoving = false;
                 }
                 else

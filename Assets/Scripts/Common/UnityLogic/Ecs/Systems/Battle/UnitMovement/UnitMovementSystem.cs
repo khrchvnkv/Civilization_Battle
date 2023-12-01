@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Common.Infrastructure.Factories.UIFactory;
 using Common.Infrastructure.Services.ECS;
 using Common.Infrastructure.Services.Input;
@@ -52,10 +51,12 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
         {
             foreach (var entity in _unitMovementFilter)
             {
-                ref var component = ref _ecsStartup.World.GetPool<UnitMovementComponent>().Get(entity);
+                ref var component = ref _unitMovementPool.Get(entity);
                 var model = component.Unit.Model;
                 var path = _sceneContextService.GridMap.GetPath(model.TeamType, model.CellData, component.MoveTo.Data);
-                if (path.Any()) component.ExecuteMove(path);
+                _sceneContextService.GridMap.IsEnemyLocated(model.TeamType, component.MoveTo.Data, out var attackedUnit);
+                
+                component.Unit.MoveUnit(path, attackedUnit);
                 _ecsStartup.World.GetPool<UnitMovementComponent>().Del(entity);
             }
         }

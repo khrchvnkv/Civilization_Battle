@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Units;
 
@@ -14,7 +13,5 @@ namespace Common.UnityLogic.Ecs.Components.Units
             Unit = unit;
             MoveTo = moveTo;
         }
-
-        public void ExecuteMove(in List<Cell> path) => Unit.MoveUnit(path);
     }
 }

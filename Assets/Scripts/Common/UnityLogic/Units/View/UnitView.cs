@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.UnityLogic.Units
+namespace Common.UnityLogic.Units.View
 {
     public sealed class UnitView : MonoBehaviour
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.UnityLogic.Builders.Grid;
@@ -89,6 +90,18 @@ namespace Common.Infrastructure.Services.SceneContext
             }
             _availablePaths.Clear();
         }
+
+        public bool IsEnemyLocated(TeamTypes teamType, Vector2Int cellData, out Unit enemyUnit)
+        {
+            enemyUnit = null;
+            var locatedUnits = _unitsBuilder.Units.Where(x => x.Model.CellData == cellData).ToArray();
+            if (!locatedUnits.Any()) return false;
+            
+            if (locatedUnits.Length > 1) throw new Exception("More than one unit has the same cell data");
+            enemyUnit = locatedUnits[0];
+            return true;
+        }
+
 
         private List<Vector2Int> GetPathList(TeamTypes teamType, Vector2Int from, Vector2Int to)
         {

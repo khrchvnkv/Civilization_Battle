@@ -55,7 +55,7 @@ namespace Common.Infrastructure.Services.Input
 
                 if (UnityEngine.Input.GetMouseButtonDown(0))
                 {
-                    if (hit.collider.gameObject.TryGetComponent(out Unit unit) && unit != _selectedUnit && !unit.IsMoving)
+                    if (hit.collider.gameObject.TryGetComponent(out Unit unit) && unit != _selectedUnit && unit.IsAvailable)
                     {
                         _selectedUnit = unit;
                         UnitClicked?.Invoke(_selectedUnit);
