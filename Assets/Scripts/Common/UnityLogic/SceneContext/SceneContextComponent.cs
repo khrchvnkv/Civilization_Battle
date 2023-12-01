@@ -28,9 +28,9 @@ namespace Common.UnityLogic.SceneContext
         private void Init()
         {
             _sceneContextService.MainCamera = Camera.main;
-            _sceneContextService.GridMap = new GridMap(_gridBuilder.CellBuilders);
             _sceneContextService.UnitsBuilder = _unitsBuilder;
-            
+            _sceneContextService.GridMap = new GridMap(_unitsBuilder, _gridBuilder.CellBuilders);
+
             _uiFactory.ShowWindow(new GameHudWindowData());
         }
     }

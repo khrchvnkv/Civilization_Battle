@@ -2,7 +2,6 @@ using System;
 using Common;
 using Common.StaticData;
 using Common.UnityLogic.Units;
-using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +9,6 @@ namespace Editor.UnitsEditor
 {
     public sealed class UnitsEditorWindow : EditorWindow
     {
-        [SerializeField, ShowAssetPreview] private GameObject _test;
-        
         private string _name;
         private float _hp;
         private float _damage;

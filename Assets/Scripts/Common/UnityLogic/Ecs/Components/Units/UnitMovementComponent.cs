@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Units;
-using UnityEngine;
 
 namespace Common.UnityLogic.Ecs.Components.Units
 {
@@ -16,9 +15,6 @@ namespace Common.UnityLogic.Ecs.Components.Units
             MoveTo = moveTo;
         }
 
-        public void ExecuteMove(in List<Cell> path)
-        {
-            Unit.MoveUnit(path);
-        }
+        public void ExecuteMove(in List<Cell> path) => Unit.MoveUnit(path);
     }
 }

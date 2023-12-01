@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.UnityLogic.Builders.Grid;
 using DG.Tweening;
 using UnityEngine;
@@ -17,6 +19,10 @@ namespace Common.UnityLogic.Units
 
         public void MoveUnit(List<Cell> cells, UnitModel unitModel)
         {
+            if (!cells.Any()) throw new Exception("Path collection has 0 node");
+
+            var lastCell = cells[^1];
+            unitModel.CellData = lastCell.Data;
             IsMoving = true;
             MoveTween();
 
@@ -35,7 +41,6 @@ namespace Common.UnityLogic.Units
                     // Complete moving
                     _transform.position = cell.UnitSpawnPoint.position;
                     _transform.SetParent(cell.UnitSpawnPoint);
-                    unitModel.CellData = cell.Data;
                     IsMoving = false;
                 }
                 else
