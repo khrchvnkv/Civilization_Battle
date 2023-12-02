@@ -1,5 +1,6 @@
 using System;
 using Common.Infrastructure.Services.MonoUpdate;
+using Common.UnityLogic.Ecs.OneFrames;
 using Common.UnityLogic.Ecs.Systems.Battle;
 using Common.UnityLogic.Ecs.Systems.Battle.UnitMovement;
 using Common.UnityLogic.Ecs.Systems.Battle.UnitSelection;
@@ -32,6 +33,18 @@ namespace Common.Infrastructure.Services.ECS
             _monoUpdateSystem.OnUpdate -= UpdateEcs;
             _updateSystems.Destroy();
             World.Destroy();
+        }
+        
+        public void EnableBattleSystem()
+        {
+            var entity = World.NewEntity();
+            World.GetPool<EnableBattleSystemEvent>().Add(entity);
+        }
+
+        public void DisableBattleSystem()
+        {
+            var entity = World.NewEntity();
+            World.GetPool<DisableBattleSystemEvent>().Add(entity);
         }
 
         private void Init()

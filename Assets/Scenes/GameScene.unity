@@ -16137,7 +16137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Cell>k__BackingField: {fileID: 1854180254}
-  <UnitName>k__BackingField: NONE
+  <UnitName>k__BackingField: Unit_1
   <TeamType>k__BackingField: 0
 --- !u!65 &1854180256
 BoxCollider:

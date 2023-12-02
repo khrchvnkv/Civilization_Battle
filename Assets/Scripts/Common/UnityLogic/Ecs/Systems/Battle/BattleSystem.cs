@@ -67,50 +67,53 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
             if (!_isActive) return;
             
             var movesCompleted = true;
+            var hasAliveEnemies = false;
             foreach (var entity in _teamsFilter)
             {
                 ref var teamComponent = ref _teamsPool.Get(entity);
+
+                if (teamComponent.IsActiveTeam)
+                {
+                    if (teamComponent.UnitModel.HasAvailableRange) movesCompleted = false;
+                }
+                else
+                {
+                    if (teamComponent.UnitModel.IsAlive) hasAliveEnemies = true;
+                }
+            }
+
+            if (hasAliveEnemies)
+            {
+                if (!movesCompleted)
+                {
+                    // check event complete move
+                    foreach (var entity in _completeMoveFilter)
+                    {
+                        _completeMovePool.Del(entity);
+                        movesCompleted = true;
+                    }
+                }
+
+                if (movesCompleted) ChangeTeam();
+            }
+            else
+            {
                 
-                if (teamComponent.UnitModel.HasAvailableRange)
-                {
-                    movesCompleted = false;
-                    break;
-                }
-            }
-
-            if (!movesCompleted)
-            {
-                // check event complete move
-                foreach (var entity in _completeMoveFilter)
-                {
-                    _completeMovePool.Del(entity);
-                    movesCompleted = true;
-                }
-            }
-
-            if (movesCompleted)
-            {
-                ChangeTeam();
             }
         }
 
         private void UpdateSystemActivityState()
         {
-            if (_isActive)
+            foreach (var entity in _disableBattleSystemFilter)
             {
-                foreach (var entity in _disableBattleSystemFilter)
-                {
-                    _disableBattleSystemPool.Del(entity);
-                    _isActive = false;
-                }
+                _disableBattleSystemPool.Del(entity);
+                _isActive = false;
             }
-            else
+
+            foreach (var entity in _enableBattleSystemFilter)
             {
-                foreach (var entity in _enableBattleSystemFilter)
-                {
-                    _enableBattleSystemPool.Del(entity);
-                    _isActive = true;
-                }
+                _enableBattleSystemPool.Del(entity);
+                _isActive = true;
             }
         }
 

@@ -200,7 +200,7 @@ namespace Common.Infrastructure.Services.SceneContext
                     if (!availableNodes.TryGetValue(to, out var oldNode) || oldNode.Range > pathNode.Range)
                     {
                         availableNodes[to] = pathNode;
-                        CalculateAllPaths(pathNode);
+                        if (!IsEnemyLocated(teamType, to)) CalculateAllPaths(pathNode);
                     }
                 }
             }
