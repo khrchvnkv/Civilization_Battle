@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Common.Infrastructure.Services.ECS;
+using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
 using Common.StaticData;
 using Common.UnityLogic.Builders.Grid;
@@ -27,6 +28,7 @@ namespace Common.UnityLogic.Units
         [SerializeField] private Collider _collider;
 
         private IEcsStartup _ecsStartup;
+        private IInputService _inputService;
         
         public int EntityID => _unitProvider.EntityID;
         public bool IsAvailable => _unitHealth.IsAlive && !_unitMovement.IsMoving && IsActiveTeam();
@@ -44,11 +46,15 @@ namespace Common.UnityLogic.Units
         }
 
         [Inject]
-        private void Construct(IEcsStartup ecsStartup) => _ecsStartup = ecsStartup;
+        private void Construct(IEcsStartup ecsStartup, IInputService inputService)
+        {
+            _ecsStartup = ecsStartup;
+            _inputService = inputService;
+        }
 
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
         {
-            Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitMovement);
+            Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitView);
             _unitHealth.Init(Model.StaticData.HP);
             _unitView.UpdateView(teamType);
 
@@ -83,10 +89,15 @@ namespace Common.UnityLogic.Units
             Model.AvailableMovementRange = 0;
         }
 
-        private void OnEnable() => _unitHealth.Died += UnitDied;
+        private void OnEnable()
+        {
+            _inputService.UnitClicked += UpdateSelectedView;
+            _unitHealth.Died += UnitDied;
+        }
 
         private void OnDisable()
         {
+            _inputService.UnitClicked -= UpdateSelectedView;
             _unitHealth.Died -= UnitDied;
             DisableEcsProvider();
         }
@@ -96,6 +107,8 @@ namespace Common.UnityLogic.Units
             DisableEcsProvider();
             DisableCollider();
         }
+
+        private void UpdateSelectedView(Unit unit) => _unitView.SetSelectedViewActivity(unit == this);
 
         private void EnableEcsProvider() => _unitProvider.enabled = true;
         

@@ -63,6 +63,8 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
         
         private void UnitSelected(Unit unit)
         {
+            if (unit is null) return;
+            
             _sceneContextService.GridMap.HidePath();
             _uiFactory.ShowWindow(new GameHudWindowData());
 

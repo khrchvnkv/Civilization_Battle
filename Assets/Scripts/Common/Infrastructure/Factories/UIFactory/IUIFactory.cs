@@ -1,5 +1,4 @@
 using Common.Infrastructure.WindowsManagement;
-using Cysharp.Threading.Tasks;
 
 namespace Common.Infrastructure.Factories.UIFactory
 {

@@ -32,6 +32,18 @@ namespace Common.UnityLogic.Builders.Units
             
             Init();
         }
+
+        public void ResetUnits()
+        {
+            DeactivateBattleSystem();
+            foreach (var unit in _units)
+            {
+                _unitsFactory.DespawnUnit(unit);
+            }
+            _units.Clear();
+            
+            Init();
+        }
         
         private void Init()
         {
@@ -50,6 +62,12 @@ namespace Common.UnityLogic.Builders.Units
         {
             var entity = _ecsStartup.World.NewEntity();
             _ecsStartup.World.GetPool<EnableBattleSystemEvent>().Add(entity);
+        }
+
+        private void DeactivateBattleSystem()
+        {
+            var entity = _ecsStartup.World.NewEntity();
+            _ecsStartup.World.GetPool<DisableBattleSystemEvent>().Add(entity);
         }
     }
 }

@@ -8,5 +8,7 @@ namespace Common.Infrastructure.Services.SceneContext
         Camera MainCamera { get; set; }
         GridMap GridMap { get; set; }
         UnitsBuilder UnitsBuilder { get; set; }
+
+        void ResetScene();
     }
 }

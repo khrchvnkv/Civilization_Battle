@@ -4,7 +4,6 @@ using Common.Infrastructure.Services.AssetsManagement;
 using Common.Infrastructure.Services.StaticData;
 using Common.Infrastructure.WindowsManagement;
 using Common.UnityLogic.UI.Windows;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Common.Infrastructure.Factories.UIFactory

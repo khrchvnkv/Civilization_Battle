@@ -1,5 +1,6 @@
 using System.Text;
 using Common.Infrastructure.Services.ECS;
+using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Ecs.OneFrames;
 using TMPro;
 using UnityEngine;
@@ -11,19 +12,26 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
     public sealed class GameHudWindow : WindowBase<GameHudWindowData>
     {
         [SerializeField] private Button _nextTurnButton;
+        [SerializeField] private Button _restartButton;
         [SerializeField] private GameObject _unitSlot;
         [SerializeField] private TMP_Text _statsText;
 
         private IEcsStartup _ecsStartup;
+        private ISceneContextService _sceneContextService;
 
         [Inject]
-        private void Construct(IEcsStartup ecsStartup) => _ecsStartup = ecsStartup;
-        
+        private void Construct(IEcsStartup ecsStartup, ISceneContextService sceneContextService)
+        {
+            _ecsStartup = ecsStartup;
+            _sceneContextService = sceneContextService;
+        }
+
         protected override void PrepareForShowing()
         {
             base.PrepareForShowing();
 
             _nextTurnButton.onClick.AddListener(NextTurn);
+            _restartButton.onClick.AddListener(Restart);
 
             var unitSlotActive = WindowData.Unit.HasValue;
             _unitSlot.SetActive(unitSlotActive);
@@ -44,6 +52,7 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
             base.PrepareForHiding();
             
             _nextTurnButton.onClick.RemoveListener(NextTurn);
+            _restartButton.onClick.RemoveListener(Restart);
         }
 
         private void NextTurn()
@@ -51,5 +60,7 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
             var entity = _ecsStartup.World.NewEntity();
             _ecsStartup.World.GetPool<NextTurnEvent>().Add(entity);
         }
+
+        private void Restart() => _sceneContextService.ResetScene();
     }
 }

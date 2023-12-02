@@ -7,7 +7,6 @@ namespace Common.UnityLogic.Ecs.Components.Units
         public readonly UnitModel UnitModel;
         
         public bool IsActiveTeam { get; set; }
-        public bool HasAvailableRange => UnitModel.AvailableMovementRange > 0;
 
         public UnitTeamComponent(UnitModel unitModel, bool isActiveTeam)
         {

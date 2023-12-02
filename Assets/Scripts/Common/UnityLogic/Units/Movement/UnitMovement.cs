@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Common.UnityLogic.Builders.Grid;
 using DG.Tweening;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Common.UnityLogic.Units.Movement
         private const float MovementBtwCellsDuration = 0.5f;
 
         [SerializeField] private Transform _transform;
+
+        private Tween _tween;
         
         public bool IsMoving { get; private set; }
 
@@ -31,7 +34,7 @@ namespace Common.UnityLogic.Units.Movement
             MoveTween();
 
             void MoveTween() =>
-                _transform
+                _tween = _transform
                     .DOMove(cells[0].UnitSpawnPoint.position, MovementBtwCellsDuration)
                     .SetEase(Ease.Linear)
                     .OnComplete(MoveToNextPoint);
@@ -55,5 +58,7 @@ namespace Common.UnityLogic.Units.Movement
                 }
             }
         }
+
+        private void OnDestroy() => _tween?.Kill();
     }
 }

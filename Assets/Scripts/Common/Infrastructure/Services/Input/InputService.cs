@@ -48,9 +48,13 @@ namespace Common.Infrastructure.Services.Input
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.gameObject.TryGetComponent(out Cell cell) && _hoveredCell != cell)
+                if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                    HoverCell(cell);
+                    if (cell != _hoveredCell) HoverCell(cell);
+                }
+                else
+                {
+                    UnhoverCell();
                 }
 
                 if (UnityEngine.Input.GetMouseButtonDown(0))
@@ -60,13 +64,14 @@ namespace Common.Infrastructure.Services.Input
                         if (unit.IsAvailable)
                         {
                             _selectedUnit = unit;
-                            UnitClicked?.Invoke(_selectedUnit);
+                            InvokeUnitSelected();
                             return;
                         }
                         
                         // Try attack
                         var unitCellData = unit.Model.CellData;
-                        if (_sceneContextService.GridMap.TryGetCell(unitCellData, out var unitCell))
+                        if (_selectedUnit is not null && 
+                            _sceneContextService.GridMap.TryGetCell(unitCellData, out var unitCell))
                         {
                             HoverCell(unitCell);
                         }
@@ -76,10 +81,17 @@ namespace Common.Infrastructure.Services.Input
                     {
                         UnitMoveClicked?.Invoke(_selectedUnit, _hoveredCell);
                         _selectedUnit = null;
+                        InvokeUnitSelected();
                     }
                 }
             }
+            else
+            {
+                UnhoverCell();
+            }
         }
+
+        private void InvokeUnitSelected() => UnitClicked?.Invoke(_selectedUnit);
 
         private void HoverCell(in Cell cell)
         {

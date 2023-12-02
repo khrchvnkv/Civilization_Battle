@@ -71,7 +71,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
             {
                 ref var teamComponent = ref _teamsPool.Get(entity);
                 
-                if (teamComponent.HasAvailableRange)
+                if (teamComponent.UnitModel.HasAvailableRange)
                 {
                     movesCompleted = false;
                     break;
