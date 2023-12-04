@@ -20,6 +20,13 @@ namespace Common.UnityLogic.Units.Movement
 
         private void OnValidate() => _transform ??= transform;
 
+        public void LookToEachOther(in UnitMovement targetMovement)
+        {
+            var direction = targetMovement._transform.position - _transform.position;
+            _transform.rotation = Quaternion.LookRotation(direction);
+            targetMovement._transform.rotation = Quaternion.LookRotation(-direction);
+        }
+        
         public void MoveUnit(List<Cell> cells, UnitModel unitModel, Action completePathAction = null)
         {
             if (!cells.Any())
@@ -33,11 +40,15 @@ namespace Common.UnityLogic.Units.Movement
             IsMoving = true;
             MoveTween();
 
-            void MoveTween() =>
+            void MoveTween()
+            {
+                var direction = cells[0].UnitSpawnPoint.position - _transform.position;
+                _transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
                 _tween = _transform
                     .DOMove(cells[0].UnitSpawnPoint.position, MovementBtwCellsDuration)
                     .SetEase(Ease.Linear)
                     .OnComplete(MoveToNextPoint);
+            }
 
             void MoveToNextPoint()
             {

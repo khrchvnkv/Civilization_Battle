@@ -54,9 +54,8 @@ namespace Common.UnityLogic.Units
 
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
         {
-            Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitView);
+            Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitView, _unitMovement);
             _unitHealth.Init(Model.StaticData.HP);
-            _unitView.UpdateView(teamType);
 
             EnableEcsProvider();
             EnableCollider();
@@ -64,8 +63,10 @@ namespace Common.UnityLogic.Units
 
         public void MoveUnit(in List<Cell> cells, Unit attackedUnit = null)
         {
+            _unitView.PlayMoveAnimation();
             _unitMovement.MoveUnit(cells, Model, () =>
             {
+                _unitView.PlayIdleAnimation();
                 if (attackedUnit is not null) Attack(attackedUnit);
             });
         }
@@ -76,12 +77,26 @@ namespace Common.UnityLogic.Units
             return component.IsActiveTeam;
         }
         
-        private void TakeDamage(in float damage) => _unitHealth.TakeDamage(damage);
+        private void TakeDamage(in float damage)
+        {
+            _unitHealth.TakeDamage(damage);
+            if (_unitHealth.IsAlive)
+            {
+                _unitView.PlayHitAnimation();
+            }
+            else
+            {
+                _unitView.PlayDieAnimation();
+            }
+        }
 
         private void Attack(in Unit attackedUnit)
         {
             if (attackedUnit is null) throw new Exception("The attacked unit can not be null");
 
+            _unitMovement.LookToEachOther(attackedUnit._unitMovement);
+            
+            _unitView.PlayAttackAnimation();
             var damageMultiplier = GridMap.IsDiagonalCells(Model.CellData, attackedUnit.Model.CellData)
                 ? Model.StaticData.DiagonalAttackMultiplier
                 : 1.0f;

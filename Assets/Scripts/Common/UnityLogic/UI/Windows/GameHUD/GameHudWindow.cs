@@ -41,8 +41,8 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
                 var unitModel = WindowData.Unit.Value.UnitModel;
 
                 var sb = new StringBuilder();
-                sb.Append($"HP: {unitModel.HP}/{unitModel.StaticData.HP}\n");
-                sb.Append($"Damage: {unitModel.StaticData.Damage}\n");
+                sb.Append($"HP: {unitModel.HP}/{unitModel.StaticData.HP}\t");
+                sb.Append($"Damage: {unitModel.StaticData.Damage}\t");
                 sb.Append($"Movement: {unitModel.AvailableMovementRange}/{unitModel.StaticData.Range}");
                 _statsText.text = sb.ToString();
             }

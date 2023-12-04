@@ -59,7 +59,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
             _teamsFilter = world.Filter<UnitTeamComponent>().End();
             _teamsPool = world.GetPool<UnitTeamComponent>();
 
-            _activeTeam = DefaultTeam;
+            ResetActiveTeam();
         }
 
         public void Run(IEcsSystems systems)
@@ -69,12 +69,14 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
             
             var movesCompleted = true;
             var hasAliveEnemies = false;
+            var hasMovingUnit = false;
             foreach (var entity in _teamsFilter)
             {
                 ref var teamComponent = ref _teamsPool.Get(entity);
 
                 if (teamComponent.IsActiveTeam)
                 {
+                    if (teamComponent.UnitModel.IsMoving) hasMovingUnit = true;
                     if (teamComponent.UnitModel.HasAvailableRange) movesCompleted = false;
                 }
                 else
@@ -85,22 +87,20 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
 
             if (hasAliveEnemies)
             {
-                if (!movesCompleted)
+                // check event complete move
+                foreach (var entity in _completeMoveFilter)
                 {
-                    // check event complete move
-                    foreach (var entity in _completeMoveFilter)
-                    {
-                        _completeMovePool.Del(entity);
-                        movesCompleted = true;
-                    }
+                    _completeMovePool.Del(entity);
+                    movesCompleted = true;
                 }
 
-                if (movesCompleted) ChangeTeam();
+                if (!hasMovingUnit && movesCompleted) ChangeTeam();
             }
             else
             {
                 _uiFactory.Hide(new GameHudWindowData());
                 _uiFactory.ShowWindow(new WinWindowData(_activeTeam));
+                ResetActiveTeam();
             }
         }
 
@@ -148,5 +148,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
                 teamComponent.UnitModel.AvailableMovementRange = isActiveTeam ? teamComponent.UnitModel.StaticData.Range : 0;
             }
         }
+
+        private void ResetActiveTeam() => _activeTeam = DefaultTeam;
     }
 }
