@@ -113,7 +113,7 @@ namespace Common.Infrastructure.Services.SceneContext
         {
             enemyUnit = null;
             var locatedUnits = _unitsBuilder.Units
-                .Where(x => x.Model.CellData == cellData && x.Model.TeamType != teamType).ToArray();
+                .Where(x => x.Model.CellData == cellData && x.Model.TeamType != teamType && x.Model.IsAlive).ToArray();
             if (!locatedUnits.Any()) return false;
             
             if (locatedUnits.Length > 1) throw new Exception("More than one unit has the same cell data");
