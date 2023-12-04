@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Common.Infrastructure.Factories.UnitsFactory;
 using Common.Infrastructure.Services.ECS;
 using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
@@ -29,6 +30,7 @@ namespace Common.UnityLogic.Units
 
         private IEcsStartup _ecsStartup;
         private IInputService _inputService;
+        private IUnitsFactory _unitsFactory;
         
         public int EntityID => _unitProvider.EntityID;
         public bool IsAvailable => _unitHealth.IsAlive && !_unitMovement.IsMoving && IsActiveTeam();
@@ -46,10 +48,11 @@ namespace Common.UnityLogic.Units
         }
 
         [Inject]
-        private void Construct(IEcsStartup ecsStartup, IInputService inputService)
+        private void Construct(IEcsStartup ecsStartup, IInputService inputService, IUnitsFactory unitsFactory)
         {
             _ecsStartup = ecsStartup;
             _inputService = inputService;
+            _unitsFactory = unitsFactory;
         }
 
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
@@ -102,6 +105,8 @@ namespace Common.UnityLogic.Units
                 : 1.0f;
             attackedUnit.TakeDamage(damageMultiplier * Model.StaticData.Damage);
             Model.AvailableMovementRange = 0;
+
+            _unitsFactory.TrySelectAvailableUnit();
         }
 
         private void OnEnable()

@@ -11,5 +11,7 @@ namespace Common.Infrastructure.Services.Input
 
         void Enable();
         void Disable();
+
+        void SelectUnit(in Unit newUnit);
     }
 }

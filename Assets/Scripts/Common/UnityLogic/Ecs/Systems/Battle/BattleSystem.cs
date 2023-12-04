@@ -1,5 +1,6 @@
 using System;
 using Common.Infrastructure.Factories.UIFactory;
+using Common.Infrastructure.Factories.UnitsFactory;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Ecs.Components.Units;
 using Common.UnityLogic.Ecs.OneFrames;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Common.Infrastructure.Factories.UnitsFactory;
 using Common.Infrastructure.Services.ECS;
@@ -35,11 +36,7 @@ namespace Common.UnityLogic.Builders.Units
         public void ResetUnits()
         {
             _ecsStartup.DisableBattleSystem();
-            foreach (var unit in _units)
-            {
-                _unitsFactory.DespawnUnit(unit);
-            }
-            _units.Clear();
+            ClearAllUnits();
             
             Init();
         }
@@ -56,5 +53,16 @@ namespace Common.UnityLogic.Builders.Units
 
             _ecsStartup.EnableBattleSystem();
         }
+
+        private void ClearAllUnits()
+        {
+            foreach (var unit in _units)
+            {
+                _unitsFactory.DespawnUnit(unit);
+            }
+            _units.Clear();
+        }
+
+        private void OnDestroy() => ClearAllUnits();
     }
 }

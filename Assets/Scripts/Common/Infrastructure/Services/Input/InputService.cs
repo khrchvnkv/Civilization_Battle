@@ -39,6 +39,15 @@ namespace Common.Infrastructure.Services.Input
             _isActive = false;
         }
 
+        public void SelectUnit(in Unit newUnit)
+        {
+            if (newUnit != _selectedUnit)
+            {
+                _selectedUnit = newUnit;
+                InvokeUnitSelected();
+            }
+        }
+
         private void UpdateInput()
         {
             if (!_isActive) return;
@@ -63,8 +72,7 @@ namespace Common.Infrastructure.Services.Input
                     {
                         if (unit.IsAvailable)
                         {
-                            _selectedUnit = unit;
-                            InvokeUnitSelected();
+                            SelectUnit(unit);
                             return;
                         }
                         
