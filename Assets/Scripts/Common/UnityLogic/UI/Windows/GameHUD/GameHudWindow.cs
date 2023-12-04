@@ -1,5 +1,6 @@
 using System.Text;
 using Common.Infrastructure.Services.ECS;
+using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Ecs.OneFrames;
 using TMPro;
@@ -53,6 +54,8 @@ namespace Common.UnityLogic.UI.Windows.GameHUD
             
             _nextTurnButton.onClick.RemoveListener(NextTurn);
             _restartButton.onClick.RemoveListener(Restart);
+            
+            _ecsStartup.DisableBattleSystem();
         }
 
         private void NextTurn()

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Unit_1
   m_EditorClassIdentifier: 
   <UnitName>k__BackingField: Unit_1
-  <HP>k__BackingField: 150
-  <Damage>k__BackingField: 10
+  <HP>k__BackingField: 100
+  <Damage>k__BackingField: 22.5
   <DiagonalAttackMultiplier>k__BackingField: 0.67
   <Range>k__BackingField: 4
   <Unit>k__BackingField: {fileID: 7412623789725149498, guid: df7e67ff81d46455aa9326b6e38238ba, type: 3}

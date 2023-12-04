@@ -3,6 +3,7 @@ using Common.Infrastructure.Factories.UIFactory;
 using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Units;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +21,8 @@ namespace Common.UnityLogic.UI.Windows.WinScreen
         private IInputService _inputService;
 
         [Inject]
-        private void Construct(ISceneContextService sceneContextService, IUIFactory uiFactory, IInputService inputService)
+        private void Construct(ISceneContextService sceneContextService, IUIFactory uiFactory, 
+            IInputService inputService)
         {
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
@@ -43,13 +45,14 @@ namespace Common.UnityLogic.UI.Windows.WinScreen
         {
             base.PrepareForHiding();
             
+            _inputService.Enable();
             _restartButton.onClick.RemoveListener(Restart);
         }
 
         private void Restart()
         {
-            _sceneContextService.ResetScene();
             _uiFactory.Hide(new WinWindowData());
+            _sceneContextService.ResetScene();
         }
     }
 }

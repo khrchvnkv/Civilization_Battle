@@ -4,6 +4,7 @@ using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Ecs.Components.Units;
 using Common.UnityLogic.Ecs.OneFrames;
 using Common.UnityLogic.UI.Windows.GameHUD;
+using Common.UnityLogic.UI.Windows.WinScreen;
 using Common.UnityLogic.Units;
 using Leopotam.EcsLite;
 using Zenject;
@@ -98,7 +99,8 @@ namespace Common.UnityLogic.Ecs.Systems.Battle
             }
             else
             {
-                
+                _uiFactory.Hide(new GameHudWindowData());
+                _uiFactory.ShowWindow(new WinWindowData(_activeTeam));
             }
         }
 
