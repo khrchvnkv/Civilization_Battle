@@ -1,6 +1,5 @@
 using System;
 using Common.Infrastructure.Factories.UIFactory;
-using Common.Infrastructure.Services.ECS;
 using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Builders.Grid;

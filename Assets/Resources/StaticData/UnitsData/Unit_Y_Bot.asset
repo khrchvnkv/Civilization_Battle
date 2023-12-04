@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7d9ef61cff344cdaef28c900a6ffa8c, type: 3}
-  m_Name: Unit_Y_Bot
+  m_Name: UNIT_Y_BOT
   m_EditorClassIdentifier: 
-  <UnitName>k__BackingField: Unit_Y_Bot
+  <UnitName>k__BackingField: UNIT_Y_BOT
   <HP>k__BackingField: 80
   <Damage>k__BackingField: 30
   <DiagonalAttackMultiplier>k__BackingField: 0.67

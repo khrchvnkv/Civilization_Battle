@@ -22,7 +22,7 @@ namespace Editor.UnitsEditor
         private void OnGUI()
         {
             GUILayout.Label("Unit Data");
-            _name = EditorGUILayout.TextField("Name", _name);
+            _name = EditorGUILayout.TextField("Name", _name.ToUpper());
 
             DrawProperty("HP", () => _hp = EditorGUILayout.Slider(_hp, 1, 100_000));
             DrawProperty("Damage", () => _damage = EditorGUILayout.Slider(_damage, 0.1f, 100_000));
@@ -32,11 +32,13 @@ namespace Editor.UnitsEditor
             DrawProperty("Prefab",
                 () => _prefab = (Unit)EditorGUILayout.ObjectField(_prefab, typeof(Unit), true));
 
-            if (GUILayout.Button("Create Data"))
-            {
-                TryCreateUnitData();
-            }
+            GUILayout.Space(50);
+            
+            if (GUILayout.Button("Create/Update Data")) CreateUnitData();
+
+            if (GUILayout.Button("Delete Data")) TryDeleteData();
         }
+
         private void DrawProperty(in string label, Action action)
         {
             GUILayout.BeginHorizontal();
@@ -44,33 +46,66 @@ namespace Editor.UnitsEditor
             action?.Invoke();
             GUILayout.EndHorizontal();
         }
-        private void TryCreateUnitData()
+        
+        private void CreateUnitData()
         {
-            if (string.IsNullOrWhiteSpace(_name)) throw new Exception("Incorrect unit name");
-            if (ResourceAlreadyExists()) throw new Exception($"Resource with name {_name} already created");
+            CheckNameData();
             if (_prefab is null) throw new Exception("No prefab data");
             
+            CheckAlreadyCreatingAsset();
             var staticData = CreateInstance<UnitStaticData>();
-            staticData.name = GetUnitDataName();
+            staticData.name = _name;
             staticData.UnitName = _name;
             staticData.HP = _hp;
             staticData.Damage = _damage;
             staticData.DiagonalAttackMultiplier = _diagonalDamageMultiplier;
             staticData.Range = _range;
             staticData.Unit = _prefab;
-
+            
             AssetDatabase.CreateAsset(staticData, $"{Constants.UnitDataPath.GlobalPath}/{Constants.UnitDataPath.LocalPath}/{staticData.name}.asset");
             AssetDatabase.SaveAssets();
-
+            
             EditorUtility.FocusProjectWindow();
 
             Selection.activeObject = staticData;
         }
-        private bool ResourceAlreadyExists()
+        
+        private void TryDeleteData()
         {
-            var resource = Resources.Load($"{Constants.UnitDataPath.LocalPath}/{GetUnitDataName()}");
-            return resource is not null;
+            CheckNameData();
+
+            var unitStaticData = GetResourcesStaticData();
+            if (unitStaticData is not null)
+            {
+                DeleteData();
+            }
+            else
+            {
+                Debug.LogWarning($"No data with name: {_name}");
+            }
         }
-        private string GetUnitDataName() => _name;
+        
+        private void DeleteData()
+        {
+            AssetDatabase.DeleteAsset(
+                $"{Constants.UnitDataPath.GlobalPath}/{Constants.UnitDataPath.LocalPath}/{_name}.asset");
+        }
+        
+        private void CheckAlreadyCreatingAsset()
+        {
+            var unitStaticData = GetResourcesStaticData();
+            if (unitStaticData is not null) DeleteData();
+        }
+
+        private UnitStaticData GetResourcesStaticData()
+        {
+            var unitStaticData = Resources.Load<UnitStaticData>($"{Constants.UnitDataPath.LocalPath}/{_name}");
+            return unitStaticData;
+        }
+        
+        private void CheckNameData()
+        {
+            if (string.IsNullOrWhiteSpace(_name)) throw new Exception("Incorrect unit name");
+        }
     }
 }

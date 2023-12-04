@@ -55,7 +55,7 @@ namespace Common.UnityLogic.Units
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
         {
             Model = new UnitModel(staticData, teamType, cellData, _unitHealth, _unitView, _unitMovement);
-            _unitHealth.Init(Model.StaticData.HP);
+            _unitHealth.Setup(Model.StaticData.HP);
 
             EnableEcsProvider();
             EnableCollider();
