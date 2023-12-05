@@ -22,7 +22,7 @@ namespace Editor.UnitsEditor
         private void OnGUI()
         {
             GUILayout.Label("Unit Data");
-            _name = EditorGUILayout.TextField("Name", _name.ToUpper());
+            _name = EditorGUILayout.TextField("Name", _name?.ToUpper());
 
             DrawProperty("HP", () => _hp = EditorGUILayout.Slider(_hp, 1, 100_000));
             DrawProperty("Damage", () => _damage = EditorGUILayout.Slider(_damage, 0.1f, 100_000));
