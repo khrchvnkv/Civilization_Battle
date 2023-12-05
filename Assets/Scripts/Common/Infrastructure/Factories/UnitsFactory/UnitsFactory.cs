@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Infrastructure.Factories.Zenject;
-using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.StaticData;
 using Common.UnityLogic.Builders.Grid;
 using Common.UnityLogic.Units;
@@ -13,14 +12,12 @@ namespace Common.Infrastructure.Factories.UnitsFactory
     {
         private readonly IZenjectFactory _zenjectFactory;
         private readonly IStaticDataService _staticDataService;
-        private readonly IInputService _inputService;
         private readonly HashSet<Unit> _createdUnits;
 
-        public UnitsFactory(IZenjectFactory zenjectFactory, IStaticDataService staticDataService, IInputService inputService)
+        public UnitsFactory(IZenjectFactory zenjectFactory, IStaticDataService staticDataService)
         {
             _zenjectFactory = zenjectFactory;
             _staticDataService = staticDataService;
-            _inputService = inputService;
             _createdUnits = new();
         }
 
@@ -39,10 +36,7 @@ namespace Common.Infrastructure.Factories.UnitsFactory
             Object.Destroy(unit.gameObject);
         }
 
-        public void TrySelectAvailableUnit()
-        {
-            var availableUnit = _createdUnits.FirstOrDefault(x => x.IsAvailable && x.Model.HasAvailableRange);
-            if (availableUnit is not null) _inputService.SelectUnit(availableUnit);
-        }
+        public Unit GetAvailableUnit() => 
+            _createdUnits.FirstOrDefault(x => x.IsAvailable && x.Model.HasAvailableRange);
     }
 }

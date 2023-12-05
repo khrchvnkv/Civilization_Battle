@@ -1,4 +1,5 @@
 using System;
+using Common.Infrastructure.Factories.UnitsFactory;
 using Common.Infrastructure.Services.MonoUpdate;
 using Common.Infrastructure.Services.SceneContext;
 using Common.UnityLogic.Builders.Grid;
@@ -14,16 +15,18 @@ namespace Common.Infrastructure.Services.Input
 
         private readonly IMonoUpdateSystem _updateSystem;
         private readonly ISceneContextService _sceneContextService;
+        private readonly IUnitsFactory _unitsFactory;
 
         private Unit _selectedUnit;
         private Cell _hoveredCell;
         
         private bool _isActive;
 
-        public InputService(IMonoUpdateSystem updateSystem, ISceneContextService sceneContextService)
+        public InputService(IMonoUpdateSystem updateSystem, ISceneContextService sceneContextService, IUnitsFactory unitsFactory)
         {
             _updateSystem = updateSystem;
             _sceneContextService = sceneContextService;
+            _unitsFactory = unitsFactory;
             
             _updateSystem.OnUpdate += UpdateInput;
         }
@@ -39,7 +42,13 @@ namespace Common.Infrastructure.Services.Input
             _isActive = false;
         }
 
-        public void SelectUnit(in Unit newUnit)
+        public void SelectNextAvailableUnit()
+        {
+            var unit = _unitsFactory.GetAvailableUnit();
+            if (unit is not null) SelectUnit(unit);
+        }
+        
+        private void SelectUnit(in Unit newUnit)
         {
             if (newUnit != _selectedUnit)
             {

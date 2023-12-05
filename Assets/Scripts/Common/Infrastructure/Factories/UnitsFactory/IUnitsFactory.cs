@@ -7,6 +7,6 @@ namespace Common.Infrastructure.Factories.UnitsFactory
     {
         public Unit SpawnUnit(in string unitName, in TeamTypes teamType, in Cell cell);
         void DespawnUnit(in Unit unit);
-        void TrySelectAvailableUnit();
+        Unit GetAvailableUnit();
     }
 }

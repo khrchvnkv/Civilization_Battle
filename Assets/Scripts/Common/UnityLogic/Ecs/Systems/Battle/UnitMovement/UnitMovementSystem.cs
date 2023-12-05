@@ -20,20 +20,17 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
         private IInputService _inputService;
         private ISceneContextService _sceneContextService;
         private IUIFactory _uiFactory;
-        private IUnitsFactory _unitsFactory;
 
         private EcsFilter _unitMovementFilter;
         private EcsPool<UnitMovementComponent> _unitMovementPool;
         private EcsPool<UnitTeamComponent> _unitTeamPool;
 
         [Inject]
-        private void Construct(IInputService inputService, ISceneContextService sceneContextService, 
-            IUIFactory uiFactory, IUnitsFactory unitsFactory)
+        private void Construct(IInputService inputService, ISceneContextService sceneContextService, IUIFactory uiFactory)
         {
             _inputService = inputService;
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
-            _unitsFactory = unitsFactory;
 
             _inputService.UnitMoveClicked += UnitMoveClicked;
         }
@@ -65,7 +62,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
                 teamComponent.UnitModel.AvailableMovementRange -= range;
 
                 // Auto select next unit
-                if (!teamComponent.UnitModel.HasAvailableRange) _unitsFactory.TrySelectAvailableUnit();
+                if (!teamComponent.UnitModel.HasAvailableRange) _inputService.SelectNextAvailableUnit();
 
                 _unitMovementPool.Del(entity);
             }
