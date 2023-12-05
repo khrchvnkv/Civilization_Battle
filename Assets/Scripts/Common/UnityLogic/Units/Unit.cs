@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Common.Infrastructure.Factories.UnitsFactory;
 using Common.Infrastructure.Services.ECS;
 using Common.Infrastructure.Services.Input;
 using Common.Infrastructure.Services.SceneContext;
@@ -29,7 +28,7 @@ namespace Common.UnityLogic.Units
         [SerializeField] private Collider _collider;
 
         private IEcsStartup _ecsStartup;
-        private IInputService _inputService;
+        private IUnitsControlService _unitsControlService;
 
         public int EntityID => _unitProvider.EntityID;
         public bool IsAvailable => _unitHealth.IsAlive && !_unitMovement.IsMoving && IsActiveTeam();
@@ -47,10 +46,10 @@ namespace Common.UnityLogic.Units
         }
 
         [Inject]
-        private void Construct(IEcsStartup ecsStartup, IInputService inputService)
+        private void Construct(IEcsStartup ecsStartup, IUnitsControlService unitsControlService)
         {
             _ecsStartup = ecsStartup;
-            _inputService = inputService;
+            _unitsControlService = unitsControlService;
         }
 
         public void Init(in UnitStaticData staticData, in TeamTypes teamType, in Vector2Int cellData)
@@ -104,18 +103,18 @@ namespace Common.UnityLogic.Units
             attackedUnit.TakeDamage(damageMultiplier * Model.StaticData.Damage);
             Model.AvailableMovementRange = 0;
 
-            _inputService.SelectNextAvailableUnit();
+            _unitsControlService.SelectNextAvailableUnit();
         }
 
         private void OnEnable()
         {
-            _inputService.UnitClicked += UpdateSelectedView;
+            _unitsControlService.UnitClicked += UpdateSelectedView;
             _unitHealth.Died += UnitDied;
         }
 
         private void OnDisable()
         {
-            _inputService.UnitClicked -= UpdateSelectedView;
+            _unitsControlService.UnitClicked -= UpdateSelectedView;
             _unitHealth.Died -= UnitDied;
             DisableEcsProvider();
         }

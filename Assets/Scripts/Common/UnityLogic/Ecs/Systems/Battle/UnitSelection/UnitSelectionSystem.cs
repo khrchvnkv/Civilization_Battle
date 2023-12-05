@@ -16,7 +16,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
     /// </summary>
     public sealed class UnitSelectionSystem : IEcsInitSystem, IEcsRunSystem, IDisposable
     {
-        private IInputService _inputService;
+        private IUnitsControlService _unitsControlService;
         private ISceneContextService _sceneContextService;
         private IUIFactory _uiFactory;
 
@@ -25,17 +25,17 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitSelection
         private EcsPool<UnitTeamComponent> _unitTeamPool;
 
         [Inject]
-        private void Construct(IInputService inputService, ISceneContextService sceneContextService, 
+        private void Construct(IUnitsControlService unitsControlService, ISceneContextService sceneContextService, 
             IUIFactory uiFactory)
         {
-            _inputService = inputService;
+            _unitsControlService = unitsControlService;
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
 
-            _inputService.UnitClicked += UnitSelected;
+            _unitsControlService.UnitClicked += UnitSelected;
         }
         
-        public void Dispose() => _inputService.UnitClicked -= UnitSelected;
+        public void Dispose() => _unitsControlService.UnitClicked -= UnitSelected;
 
         public void Init(IEcsSystems systems)
         {

@@ -17,7 +17,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
     /// </summary>
     public sealed class UnitMovementSystem : IEcsInitSystem, IEcsRunSystem, IDisposable
     {
-        private IInputService _inputService;
+        private IUnitsControlService _unitsControlService;
         private ISceneContextService _sceneContextService;
         private IUIFactory _uiFactory;
 
@@ -26,16 +26,16 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
         private EcsPool<UnitTeamComponent> _unitTeamPool;
 
         [Inject]
-        private void Construct(IInputService inputService, ISceneContextService sceneContextService, IUIFactory uiFactory)
+        private void Construct(IUnitsControlService unitsControlService, ISceneContextService sceneContextService, IUIFactory uiFactory)
         {
-            _inputService = inputService;
+            _unitsControlService = unitsControlService;
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
 
-            _inputService.UnitMoveClicked += UnitMoveClicked;
+            _unitsControlService.UnitMoveClicked += UnitMoveClicked;
         }
 
-        public void Dispose() => _inputService.UnitMoveClicked -= UnitMoveClicked;
+        public void Dispose() => _unitsControlService.UnitMoveClicked -= UnitMoveClicked;
         
         public void Init(IEcsSystems systems)
         {
@@ -62,7 +62,7 @@ namespace Common.UnityLogic.Ecs.Systems.Battle.UnitMovement
                 teamComponent.UnitModel.AvailableMovementRange -= range;
 
                 // Auto select next unit
-                if (!teamComponent.UnitModel.HasAvailableRange) _inputService.SelectNextAvailableUnit();
+                if (!teamComponent.UnitModel.HasAvailableRange) _unitsControlService.SelectNextAvailableUnit();
 
                 _unitMovementPool.Del(entity);
             }

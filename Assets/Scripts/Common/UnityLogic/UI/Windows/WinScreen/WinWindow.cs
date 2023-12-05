@@ -18,22 +18,22 @@ namespace Common.UnityLogic.UI.Windows.WinScreen
 
         private ISceneContextService _sceneContextService;
         private IUIFactory _uiFactory;
-        private IInputService _inputService;
+        private IUnitsControlService _unitsControlService;
 
         [Inject]
         private void Construct(ISceneContextService sceneContextService, IUIFactory uiFactory, 
-            IInputService inputService)
+            IUnitsControlService unitsControlService)
         {
             _sceneContextService = sceneContextService;
             _uiFactory = uiFactory;
-            _inputService = inputService;
+            _unitsControlService = unitsControlService;
         }
 
         protected override void PrepareForShowing()
         {
             base.PrepareForShowing();
             
-            _inputService.Disable();
+            _unitsControlService.Disable();
             
             _winText.text = $"{Enum.GetName(typeof(TeamTypes), WindowData.WinningTeam)} WON!";
             _winText.color = Constants.TeamColors[WindowData.WinningTeam];
@@ -45,7 +45,7 @@ namespace Common.UnityLogic.UI.Windows.WinScreen
         {
             base.PrepareForHiding();
             
-            _inputService.Enable();
+            _unitsControlService.Enable();
             _restartButton.onClick.RemoveListener(Restart);
         }
 

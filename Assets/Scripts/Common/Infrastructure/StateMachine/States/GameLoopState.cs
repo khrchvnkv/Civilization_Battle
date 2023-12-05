@@ -4,12 +4,12 @@ namespace Common.Infrastructure.StateMachine.States
 {
     public class GameLoopState : State, IState
     {
-        private readonly IInputService _inputService;
+        private readonly IUnitsControlService _unitsControlService;
 
-        public GameLoopState(IInputService inputService) => _inputService = inputService;
+        public GameLoopState(IUnitsControlService unitsControlService) => _unitsControlService = unitsControlService;
 
-        public void Enter() => _inputService.Enable();
+        public void Enter() => _unitsControlService.Enable();
 
-        public override void Exit() => _inputService.Disable();
+        public override void Exit() => _unitsControlService.Disable();
     }
 }

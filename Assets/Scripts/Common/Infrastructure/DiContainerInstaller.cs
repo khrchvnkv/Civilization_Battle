@@ -47,7 +47,7 @@ namespace Common.Infrastructure
             Container.Bind<ISaveLoadService>().To<SaveLoadService>().FromNew().AsSingle();
             Container.Bind<IPersistentProgressService>().To<PersistentProgressService>().FromNew().AsSingle();
             Container.Bind<ISceneContextService>().To<SceneContextService>().FromNew().AsSingle();
-            Container.Bind<IInputService>().To<InputService>().FromNew().AsSingle();
+            Container.Bind<IUnitsControlService>().To<UnitsControlService>().FromNew().AsSingle();
             Container.Bind<ISceneLoader>().To<SceneLoader>().FromNew().AsSingle();
         }
         private void BindGameStateMachine()

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Common.Infrastructure.Services.Input
 {
-    public sealed class InputService : IInputService, IDisposable
+    public sealed class UnitsControlService : IUnitsControlService, IDisposable
     {
         public event Action<Unit> UnitClicked;
         public event Action<Unit, Cell> UnitMoveClicked;
@@ -22,7 +22,7 @@ namespace Common.Infrastructure.Services.Input
         
         private bool _isActive;
 
-        public InputService(IMonoUpdateSystem updateSystem, ISceneContextService sceneContextService, IUnitsFactory unitsFactory)
+        public UnitsControlService(IMonoUpdateSystem updateSystem, ISceneContextService sceneContextService, IUnitsFactory unitsFactory)
         {
             _updateSystem = updateSystem;
             _sceneContextService = sceneContextService;
@@ -31,22 +31,22 @@ namespace Common.Infrastructure.Services.Input
             _updateSystem.OnUpdate += UpdateInput;
         }
 
-        public void Dispose() => _updateSystem.OnUpdate -= UpdateInput;
-
-        public void Enable() => _isActive = true;
+        public void SelectNextAvailableUnit()
+        {
+            var unit = _unitsFactory.GetAvailableUnit();
+            if (unit is not null) SelectUnit(unit);
+        }
         
+        public void Enable() => _isActive = true;
+                
         public void Disable()
         {
             _selectedUnit = null;
             UnhoverCell();
             _isActive = false;
         }
-
-        public void SelectNextAvailableUnit()
-        {
-            var unit = _unitsFactory.GetAvailableUnit();
-            if (unit is not null) SelectUnit(unit);
-        }
+        
+        public void Dispose() => _updateSystem.OnUpdate -= UpdateInput;
         
         private void SelectUnit(in Unit newUnit)
         {

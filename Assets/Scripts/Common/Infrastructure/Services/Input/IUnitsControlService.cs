@@ -4,14 +4,14 @@ using Common.UnityLogic.Units;
 
 namespace Common.Infrastructure.Services.Input
 {
-    public interface IInputService
+    public interface IUnitsControlService
     {
         event Action<Unit> UnitClicked;
         event Action<Unit, Cell> UnitMoveClicked;
 
+        void SelectNextAvailableUnit();
+
         void Enable();
         void Disable();
-
-        void SelectNextAvailableUnit();
     }
 }
